@@ -69,15 +69,15 @@ def scrape_to_txt_and_df(url_en: str, url_es: str):
     :return:
     '''
     # Making folders to store HTMLs:
-    os.makedirs("../data/html", exist_ok=True)
+    os.makedirs("../data/testing/html", exist_ok=True)
 
-    en_lines = get_visible_text_and_html(url_en, os.path.join("../data/html", "english_raw.html"))
-    es_lines = get_visible_text_and_html(url_es, os.path.join("../data/html", "spanish_raw.html"))
+    en_lines = get_visible_text_and_html(url_en, os.path.join("../data/testing/html", "english_raw_mainpage.html"))
+    es_lines = get_visible_text_and_html(url_es, os.path.join("../data/testing/html", "spanish_raw_mainpage.html"))
 
     # Storing all the segments from each language in a TXT file:
-    with open("../data/english_testing.txt", "w", encoding="utf-8") as f:
+    with open("../data/testing/txt/english_testing.txt", "w", encoding="utf-8") as f:
         f.write("\n".join(en_lines))
-    with open("../data/spanish_testing.txt", "w", encoding="utf-8") as f:
+    with open("../data/testing/txt/spanish_testing.txt", "w", encoding="utf-8") as f:
         f.write("\n".join(es_lines))
 
     # Generating a returning a DataFrame:
@@ -92,4 +92,4 @@ if __name__ == "__main__":
     foreo_url_es = "https://www.foreo.com/es"
 
     df = scrape_to_txt_and_df(foreo_url_en, foreo_url_es)
-    df.to_csv("../data/testing_segments.csv", index=False)
+    df.to_csv("../data/testing/csv/testing_segments.csv", index=False)
