@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/notebooks/llms_evaluation_prototype.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/llms_evaluation_prototype.ipynb" afterDir="false" />
-    </list>
+    <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -63,7 +61,7 @@
       <workItem from="1760085742362" duration="6964000" />
       <workItem from="1760198177935" duration="10877000" />
       <workItem from="1760346658292" duration="870000" />
-      <workItem from="1760350904019" duration="435000" />
+      <workItem from="1760350904019" duration="462000" />
     </task>
     <servers />
   </component>
