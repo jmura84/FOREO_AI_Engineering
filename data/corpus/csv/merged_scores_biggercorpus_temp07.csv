@@ -1,0 +1,4 @@
+gemma2:9b,gemma3:4b,gemma3:4b-it-qat,thinkverse/towerinstruct:latest
+0.2252,0.2157,0.22,0.1466
+87.36,86.02,86.31,125.57
+42.5,40.77,41.11,35.66
