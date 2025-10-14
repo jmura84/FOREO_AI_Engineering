@@ -271,86 +271,86 @@ Clinical Results & Expert Reviews
 Contact us
 Language
 Shipping country
-United States Delivery estimate: 16.10.2025.
-United Kingdom Delivery estimate: 15.10.2025.
-Spain Delivery estimate: 15.10.2025.
-Australia Delivery estimate: 18.10.2025.
-France Delivery estimate: 15.10.2025.
-Germany Delivery estimate: 15.10.2025.
-Canada Delivery estimate: 19.10.2025.
-Australia Delivery estimate: 18.10.2025.
-Austria Delivery estimate: 15.10.2025.
-Bahrain Delivery estimate: 16.10.2025.
-Belgium Delivery estimate: 15.10.2025.
-Bermuda Delivery estimate: 21.10.2025.
-Bosnia & Herzegovina Delivery estimate: 18.10.2025.
-Brunei Delivery estimate: 20.10.2025.
-Bulgaria Delivery estimate: 15.10.2025.
-Canada Delivery estimate: 19.10.2025.
-Chile Delivery estimate: 19.10.2025.
-China Delivery estimate: 15.10.2025.
-Colombia Delivery estimate: 19.10.2025.
-Croatia Delivery estimate: 15.10.2025.
-Cyprus Delivery estimate: 16.10.2025.
-Czechia Delivery estimate: 15.10.2025.
-Denmark Delivery estimate: 15.10.2025.
-Estonia Delivery estimate: 15.10.2025.
-Finland Delivery estimate: 15.10.2025.
-France Delivery estimate: 15.10.2025.
-French Polynesia Delivery estimate: 19.10.2025.
-Germany Delivery estimate: 15.10.2025.
-Gibraltar Delivery estimate: 19.10.2025.
-Greece Delivery estimate: 15.10.2025.
-Hong Kong SAR China Delivery estimate: 16.10.2025.
-Hungary Delivery estimate: 15.10.2025.
-Iceland Delivery estimate: 16.10.2025.
-Ireland Delivery estimate: 15.10.2025.
-Isle of Man Delivery estimate: 17.10.2025.
-Israel Delivery estimate: 19.10.2025.
-Italy Delivery estimate: 15.10.2025.
-Japan Delivery estimate: 18.10.2025.
-Jersey Delivery estimate: 20.10.2025.
-Kazakhstan Delivery estimate: 17.10.2025.
-Kuwait Delivery estimate: 15.10.2025.
-Latvia Delivery estimate: 15.10.2025.
-Lebanon Delivery estimate: 16.10.2025.
-Lithuania Delivery estimate: 15.10.2025.
-Luxembourg Delivery estimate: 15.10.2025.
-Macao SAR China Delivery estimate: 17.10.2025.
-Malaysia Delivery estimate: 18.10.2025.
-Malta Delivery estimate: 15.10.2025.
-Mexico Delivery estimate: 19.10.2025.
-Monaco Delivery estimate: 16.10.2025.
-Netherlands Delivery estimate: 15.10.2025.
-New Zealand Delivery estimate: 15.10.2025.
-Norway Delivery estimate: 15.10.2025.
-Oman Delivery estimate: 18.10.2025.
-Peru Delivery estimate: 19.10.2025.
-Philippines Delivery estimate: 18.10.2025.
-Poland Delivery estimate: 16.10.2025.
-Portugal Delivery estimate: 15.10.2025.
-Puerto Rico Delivery estimate: 17.10.2025.
-Qatar Delivery estimate: 16.10.2025.
-Réunion Delivery estimate: 20.10.2025.
-Romania Delivery estimate: 15.10.2025.
-Russia Delivery estimate: 23.10.2025.
-Saudi Arabia Delivery estimate: 16.10.2025.
-Singapore Delivery estimate: 17.10.2025.
-Slovakia Delivery estimate: 15.10.2025.
-Slovenia Delivery estimate: 15.10.2025.
-South Africa Delivery estimate: 23.10.2025.
-South Korea Delivery estimate: 17.10.2025.
-Spain Delivery estimate: 15.10.2025.
-Sweden Delivery estimate: 15.10.2025.
-Switzerland Delivery estimate: 15.10.2025.
-Taiwan Delivery estimate: 20.10.2025.
-Thailand Delivery estimate: 19.10.2025.
-Türkiye Delivery estimate: 16.10.2025.
-United Arab Emirates Delivery estimate: 16.10.2025.
-United Kingdom Delivery estimate: 15.10.2025.
-United States Delivery estimate: 16.10.2025.
-Uzbekistan Delivery estimate: 20.10.2025.
-Vietnam Delivery estimate: 21.10.2025.
+United States Delivery estimate: 16/10/25
+United Kingdom Delivery estimate: 15/10/25
+Spain Delivery estimate: 15/10/25
+Australia Delivery estimate: 18/10/25
+France Delivery estimate: 15/10/25
+Germany Delivery estimate: 15/10/25
+Canada Delivery estimate: 19/10/25
+Australia Delivery estimate: 18/10/25
+Austria Delivery estimate: 15/10/25
+Bahrain Delivery estimate: 16/10/25
+Belgium Delivery estimate: 15/10/25
+Bermuda Delivery estimate: 21/10/25
+Bosnia & Herzegovina Delivery estimate: 18/10/25
+Brunei Delivery estimate: 20/10/25
+Bulgaria Delivery estimate: 15/10/25
+Canada Delivery estimate: 19/10/25
+Chile Delivery estimate: 19/10/25
+China Delivery estimate: 15/10/25
+Colombia Delivery estimate: 19/10/25
+Croatia Delivery estimate: 15/10/25
+Cyprus Delivery estimate: 16/10/25
+Czechia Delivery estimate: 15/10/25
+Denmark Delivery estimate: 15/10/25
+Estonia Delivery estimate: 15/10/25
+Finland Delivery estimate: 15/10/25
+France Delivery estimate: 15/10/25
+French Polynesia Delivery estimate: 19/10/25
+Germany Delivery estimate: 15/10/25
+Gibraltar Delivery estimate: 19/10/25
+Greece Delivery estimate: 15/10/25
+Hong Kong SAR China Delivery estimate: 16/10/25
+Hungary Delivery estimate: 15/10/25
+Iceland Delivery estimate: 16/10/25
+Ireland Delivery estimate: 15/10/25
+Isle of Man Delivery estimate: 17/10/25
+Israel Delivery estimate: 19/10/25
+Italy Delivery estimate: 15/10/25
+Japan Delivery estimate: 18/10/25
+Jersey Delivery estimate: 20/10/25
+Kazakhstan Delivery estimate: 17/10/25
+Kuwait Delivery estimate: 15/10/25
+Latvia Delivery estimate: 15/10/25
+Lebanon Delivery estimate: 16/10/25
+Lithuania Delivery estimate: 15/10/25
+Luxembourg Delivery estimate: 15/10/25
+Macao SAR China Delivery estimate: 17/10/25
+Malaysia Delivery estimate: 18/10/25
+Malta Delivery estimate: 15/10/25
+Mexico Delivery estimate: 19/10/25
+Monaco Delivery estimate: 16/10/25
+Netherlands Delivery estimate: 15/10/25
+New Zealand Delivery estimate: 15/10/25
+Norway Delivery estimate: 15/10/25
+Oman Delivery estimate: 18/10/25
+Peru Delivery estimate: 19/10/25
+Philippines Delivery estimate: 18/10/25
+Poland Delivery estimate: 16/10/25
+Portugal Delivery estimate: 15/10/25
+Puerto Rico Delivery estimate: 17/10/25
+Qatar Delivery estimate: 16/10/25
+Réunion Delivery estimate: 20/10/25
+Romania Delivery estimate: 15/10/25
+Russia Delivery estimate: 23/10/25
+Saudi Arabia Delivery estimate: 16/10/25
+Singapore Delivery estimate: 17/10/25
+Slovakia Delivery estimate: 15/10/25
+Slovenia Delivery estimate: 15/10/25
+South Africa Delivery estimate: 23/10/25
+South Korea Delivery estimate: 17/10/25
+Spain Delivery estimate: 15/10/25
+Sweden Delivery estimate: 15/10/25
+Switzerland Delivery estimate: 15/10/25
+Taiwan Delivery estimate: 20/10/25
+Thailand Delivery estimate: 19/10/25
+Türkiye Delivery estimate: 16/10/25
+United Arab Emirates Delivery estimate: 16/10/25
+United Kingdom Delivery estimate: 15/10/25
+United States Delivery estimate: 16/10/25
+Uzbekistan Delivery estimate: 20/10/25
+Vietnam Delivery estimate: 21/10/25
 Love beauty innovation?
 Subscribe and get 10% off your first order!
 By subscribing, I agree to receive marketing communications from FOREO. I understand that I can unsubscribe at any time.

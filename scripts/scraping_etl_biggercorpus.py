@@ -94,6 +94,13 @@ if __name__ == "__main__":
         "https://www.foreo.com/special-offers",
         "https://www.foreo.com/bestsellers",
         "https://www.foreo.com/red-light-therapy",
+        "https://www.foreo.com/luna-collection",
+        "https://www.foreo.com/luna-plus-collection",
+        "https://www.foreo.com/luna-men-collection",
+        "https://www.foreo.com/luna-mini-collection",
+        "https://www.foreo.com/luna-go-collection",
+        "https://www.foreo.com/shop/skincare?filter=1756&treatments=facial_cleansing",
+        "https://www.foreo.com/luna-facial-cleansing?filter=1754"
     ]
 
     urls_es = [u.replace("www.foreo.com", "www.foreo.com/es") for u in urls_en]
