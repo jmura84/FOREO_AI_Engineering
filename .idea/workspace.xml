@@ -4,26 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/corpus/csv/biggercorpus_segments_translated_temp07.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/corpus/csv/bleu_scores_biggercorpus_temp07.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/corpus/csv/chrf_scores_biggercorpus_temp07.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/corpus/csv/elapsed_times_temp07.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/elapsed_times_temp07.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/corpus/csv/individual_comet_scores_biggercorpus_temp07.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/corpus/csv/mean_comet_scores_biggercorpus_temp07.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/corpus/csv/merged_foreo.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/corpus/csv/merged_foreo_uniques.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/corpus/csv/merged_scores_biggercorpus_temp07.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/corpus/csv/ter_scores_biggercorpus_temp07.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/corpus/txt/luna-men-collection_en.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/txt/luna-men-collection_en.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/corpus/txt/luna-men-collection_es.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/txt/luna-men-collection_es.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/corpus/txt/luna-plus-collection_en.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/txt/luna-plus-collection_en.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/corpus/txt/luna-plus-collection_es.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/txt/luna-plus-collection_es.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/comet_scoring_testing_translation_barchart_temp07.png" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/testing scores/comet_scoring_testing_translation_barchart_temp07.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/llms_evaluation_biggercorpus.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/llms_evaluation_biggercorpus.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/testing_segment_translated_elapsedtime_temp07.png" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/testing scores/testing_segment_translated_elapsedtime_temp07.png" afterDir="false" />
-    </list>
+    <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -103,7 +84,7 @@
       <workItem from="1760351420094" duration="899000" />
       <workItem from="1760368992832" duration="9204000" />
       <workItem from="1760391220302" duration="11933000" />
-      <workItem from="1760436975438" duration="5331000" />
+      <workItem from="1760436975438" duration="6204000" />
     </task>
     <servers />
   </component>
