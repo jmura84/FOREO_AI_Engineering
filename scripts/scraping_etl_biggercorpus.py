@@ -69,19 +69,19 @@ def scrape_and_save_pair(url_en: str, url_es: str, base_folder: str):
     en_lines = scrape_website(url_en, html_folder_en)
     es_lines = scrape_website(url_es, html_folder_es)
 
-    # Guardar TXT
+    # Store the TXTs:
     with open(os.path.join(txt_folder, f"{endpoint}_en.txt"), "w", encoding="utf-8") as f:
         f.write("\n".join(en_lines))
     with open(os.path.join(txt_folder, f"{endpoint}_es.txt"), "w", encoding="utf-8") as f:
         f.write("\n".join(es_lines))
 
-    # Crear CSV alineado
+    # Create aligned CSV:
     max_len = max(len(en_lines), len(es_lines))
     en_lines += [""] * (max_len - len(en_lines))
     es_lines += [""] * (max_len - len(es_lines))
     df = pd.DataFrame({"english": en_lines, "spanish": es_lines})
     df.to_csv(os.path.join(csv_folder, f"{endpoint}.csv"), index=False)
-    print(f"✅ Guardado CSV: {endpoint}.csv ({len(df)} líneas)")
+    print(f"✅ Stored CSV: {endpoint}.csv ({len(df)} lines)")
 
     return df
 
@@ -112,7 +112,7 @@ if __name__ == "__main__":
         df["endpoint"] = urlparse(en).path.strip("/") or "index"
         all_dfs.append(df)
 
-    # CSV global fusionado
+    # Global CSV fused:
     merged_df = pd.concat(all_dfs, ignore_index=True)
     merged_df.to_csv(os.path.join(base_folder, "csv", "merged_foreo.csv"), index=False)
-    print("✅ CSV global guardado: merged_foreo.csv")
+    print("✅ Merged CSV stored as: merged_foreo.csv")
