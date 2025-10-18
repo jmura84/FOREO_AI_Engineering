@@ -17,7 +17,7 @@ def merge_foreo_texts(txt_folder):
 
     data = []
 
-    # Filtramos por endpoints sin sufijos
+    # We filter endpoints without suffixes:
     endpoints = sorted(set(f[:-7] for f in files if f.endswith("_en.txt")) |
                        set(f[:-7] for f in files if f.endswith("_es.txt")))
 
