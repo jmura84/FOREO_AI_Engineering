@@ -4,7 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="" />
+    <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/biggercorpus_segments_translated_temp07.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/biggercorpus_segments_translated_temp07.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/bleu_scores_biggercorpus_temp07.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/bleu_scores_biggercorpus_temp07.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/chrf_scores_biggercorpus_temp07.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/chrf_scores_biggercorpus_temp07.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/elapsed_times_temp07.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/elapsed_times_temp07.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/individual_comet_scores_biggercorpus_temp07.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/individual_comet_scores_biggercorpus_temp07.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma2_9b_low_scores.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma2_9b_low_scores.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma3_4b-it-qat_low_scores.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma3_4b-it-qat_low_scores.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma3_4b_low_scores.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma3_4b_low_scores.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/thinkverse_towerinstruct_latest_low_scores.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/thinkverse_towerinstruct_latest_low_scores.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/mean_comet_scores_biggercorpus_temp07.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/mean_comet_scores_biggercorpus_temp07.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/merged_scores_biggercorpus_temp07.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/merged_scores_biggercorpus_temp07.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/ter_scores_biggercorpus_temp07.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/ter_scores_biggercorpus_temp07.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/llms_evaluation_biggercorpus.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/llms_evaluation_biggercorpus.ipynb" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -64,7 +79,6 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-PY-252.26830.99" />
         <option value="bundled-python-sdk-164cda30dcd9-0af03a5fa574-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.26830.99" />
       </set>
     </attachedChunks>
@@ -92,6 +106,7 @@
       <workItem from="1760716343146" duration="8683000" />
       <workItem from="1760783094506" duration="3678000" />
       <workItem from="1760985883965" duration="795000" />
+      <workItem from="1761138358572" duration="5000" />
     </task>
     <servers />
   </component>
