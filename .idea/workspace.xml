@@ -6,11 +6,48 @@
   <component name="ChangeListManager">
     <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma2_9b_low_scores.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma2_9b_low_scores.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma3_4b-it-qat_low_scores.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma3_4b-it-qat_low_scores.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma3_4b_low_scores.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma3_4b_low_scores.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/thinkverse_towerinstruct_latest_low_scores.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/thinkverse_towerinstruct_latest_low_scores.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/bestsellers.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/biggercorpus_segments_translated_temp07.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/black-friday-preregistration.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/bleu_scores_biggercorpus_temp07.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/chrf_scores_biggercorpus_temp07.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/elapsed_times_temp07.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/faq-swiss-202.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/faq-swiss-502.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/index.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/individual_comet_scores_biggercorpus_temp07.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma2_9b_low_scores.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma3_4b-it-qat_low_scores.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma3_4b_low_scores.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/thinkverse_towerinstruct_latest_low_scores.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/luna-collection.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/luna-facial-cleansing.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/luna-go-collection.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/luna-men-collection.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/luna-mini-collection.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/luna-plus-collection.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/mean_comet_scores_biggercorpus_temp07.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/merged_foreo.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/merged_foreo_uniques.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/merged_scores_biggercorpus_temp07.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/red-light-therapy.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/shop_skincare.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/special-offers.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/ter_scores_biggercorpus_temp07.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/txt/faq-swiss-202_en.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/txt/faq-swiss-202_en.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/txt/faq-swiss-202_es.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/txt/faq-swiss-202_es.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/txt/luna-collection_en.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/txt/luna-collection_en.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/txt/luna-collection_es.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/txt/luna-collection_es.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/txt/luna-go-collection_en.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/txt/luna-go-collection_en.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/txt/luna-go-collection_es.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/txt/luna-go-collection_es.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/txt/luna-men-collection_en.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/txt/luna-men-collection_en.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/txt/luna-men-collection_es.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/txt/luna-men-collection_es.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/txt/luna-mini-collection_en.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/txt/luna-mini-collection_en.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/txt/luna-mini-collection_es.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/txt/luna-mini-collection_es.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/txt/luna-plus-collection_en.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/txt/luna-plus-collection_en.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/txt/luna-plus-collection_es.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/txt/luna-plus-collection_es.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/notebooks/llms_evaluation_biggercorpus.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/llms_evaluation_biggercorpus.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/txt_to_csv.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/txt_to_csv.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

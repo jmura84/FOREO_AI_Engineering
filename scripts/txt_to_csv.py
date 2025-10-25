@@ -3,9 +3,6 @@ import pandas as pd
 
 # THIS IS AN AD HOC SCRIPT TO ALIGN THE FOREO_MERGED.CSV FILE PROPERLY AFTER MODIFYING THE TXT FILES SEGMENTS THAT WERE BROKEN OR THAT DID NOT HAVE A MATCH IN BOTH LANGUAGES, THUS CAUSING A MISALIGNMENT IN SOME OF THE URLS CONTENT, AND POTENTIALLY CAUSING A LOWER SCORE IN THE EVALUATIONS.
 
-# Paths
-TXT_FOLDER = "../data/corpus/txt"
-OUTPUT_CSV = "../data/corpus/csv/merged_foreo.csv"
 
 def read_txt(path):
     """Read text file preserving line breaks."""
@@ -40,6 +37,9 @@ def merge_foreo_texts(txt_folder):
     return pd.DataFrame(data)
 
 if __name__ == "__main__":
+    # Paths
+    TXT_FOLDER = "../data/corpus/txt"
+    OUTPUT_CSV = "../data/corpus/csv/merged_foreo.csv"
     os.makedirs(os.path.dirname(OUTPUT_CSV), exist_ok=True)
 
     df = merge_foreo_texts(TXT_FOLDER)
