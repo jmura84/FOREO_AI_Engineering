@@ -5,7 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/notebooks/llms_evaluation_difftemps.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/biggercorpus_segments_translated_temp07.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/biggercorpus_segments_translated_temp07.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/bleu_scores_biggercorpus_temp07.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/bleu_scores_biggercorpus_temp07.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/chrf_scores_biggercorpus_temp07.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/chrf_scores_biggercorpus_temp07.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/elapsed_times_temp07.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/elapsed_times_temp07.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/individual_comet_scores_biggercorpus_temp07.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/individual_comet_scores_biggercorpus_temp07.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma2_9b_low_scores.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma2_9b_low_scores.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma3_4b-it-qat_low_scores.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma3_4b-it-qat_low_scores.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma3_4b_low_scores.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/gemma3_4b_low_scores.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/thinkverse_towerinstruct_latest_low_scores.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/low_scores/comet_low_scores/thinkverse_towerinstruct_latest_low_scores.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/mean_comet_scores_biggercorpus_temp07.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/mean_comet_scores_biggercorpus_temp07.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/merged_scores_biggercorpus_temp07.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/merged_scores_biggercorpus_temp07.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/corpus/csv/ter_scores_biggercorpus_temp07.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/corpus/csv/ter_scores_biggercorpus_temp07.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/llms_evaluation_biggercorpus.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/llms_evaluation_biggercorpus.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,33 +45,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.scraping_etl_biggercorpus.executor&quot;: &quot;Run&quot;,
-    &quot;Python.txt_to_csv.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Python_repositories/foreo-ai-engineering-project/data/aligned csv&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.scraping_etl_biggercorpus.executor": "Run",
+    "Python.txt_to_csv.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "dev",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "C:/Python_repositories/foreo-ai-engineering-project/notebooks",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Python_repositories\foreo-ai-engineering-project\data\aligned csv" />
       <recent name="C:\Python_repositories\foreo-ai-engineering-project\notebooks" />
+      <recent name="C:\Python_repositories\foreo-ai-engineering-project\data\aligned csv" />
       <recent name="C:\Python_repositories\foreo-ai-engineering-project\scripts" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
