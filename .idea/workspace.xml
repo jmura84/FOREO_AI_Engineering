@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="" />
+    <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/difftemps/csv/difftemps_segments_translated_temp0.1.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/difftemps/csv/difftemps_segments_translated_temp0.1.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/difftemps/csv/difftemps_segments_translated_temp1.0.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/difftemps/csv/difftemps_segments_translated_temp1.0.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app/modules/llm_call.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/modules/llm_call.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app/ui/streamlit_ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/ui/gradio_ui.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -32,6 +38,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.gradio_ui.executor": "Run",
     "Python.scraping_etl_biggercorpus.executor": "Run",
     "Python.txt_to_csv.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -48,6 +55,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "yarn",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   }
