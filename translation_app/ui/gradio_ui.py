@@ -6,8 +6,11 @@ from datetime import datetime
 
 try:
     from modules.llm_call import llm_translation, clean_segment
+    # --- MODIFIED: Import the transcription module ---
+    from modules.audio2text import generate_srt_from_file
 except ImportError:
-    print(f"Error: ui.gradio_ui could not import 'modules.llm_call'.")
+    # --- MODIFIED: Updated error message ---
+    print(f"Error: ui.gradio_ui could not import 'modules.llm_call' or 'modules.audio2text'.")
     print("Make sure to run the app using 'main.py' from the project root.")
     # Exiting is not ideal, but prevents a bigger crash
     raise
@@ -29,19 +32,20 @@ LANGUAGES = ["English", "Spanish", "Polish", "Turkish"]
 
 def translate_and_clean(text, model, temperature, source_lang, target_lang):
     """
-    Gradio wrapper: Calls the translation and then cleans the result.
-    Returns:
-    1. The translation (for the text box)
-    2. The translation (for the hidden state)
-    3. Hides the save button
-    4. Hides the feedback label
+    Gradio wrapper: Calls the translation.
+    The llm_translation function now handles its own cleaning.
     """
     if not text:
         return "", "", gr.Button(visible=False), gr.Label(visible=False)
 
     # Pass all arguments to the translation function
     translation = llm_translation(model, text, temperature, source_lang, target_lang)
-    clean_trans = clean_segment(translation)
+
+    # --- CORRECTION ---
+    # We NO LONGER call clean_segment(translation) here.
+    # llm_translation is smart enough to handle SRT or simple text.
+    clean_trans = translation
+    # --- END OF CORRECTION ---
 
     # (1) target_text, (2) original_translation_state, (3) save_button, (4) feedback_label
     return clean_trans, clean_trans, gr.Button(visible=False), gr.Label(visible=False)
@@ -58,9 +62,10 @@ def save_modification(source_text, modified_target_text, original_translation, s
     # 1. Format the language pair
     language_pair = f"{source_lang} -> {target_lang}"
 
-    # --- OBTAINING TIMESTAMP ---
+    # --- GET TIMESTAMP ---
+    # Get the current time once, formatted without microseconds
     current_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
-    # --- END OF TIMESTAMP ---
+    # --- END TIMESTAMP ---
 
     # 2. Convert text blocks into lists of lines
     source_lines = (source_text or "").split('\n')
@@ -83,14 +88,17 @@ def save_modification(source_text, modified_target_text, original_translation, s
             # It's an existing line that has been modified
             line_changed = True
 
-        # If the line changed AND there is a corresponding source line
-        if line_changed and i < len(source_lines):
+        # --- MODIFICATION ---
+        # If the line changed AND there is a corresponding source line AND
+        # the source line is NOT EMPTY, then save it.
+        if line_changed and i < len(source_lines) and source_lines[i].strip() != "":
             new_data.append({
                 'source': source_lines[i],
                 'target': modified_target_lines[i],
                 'language_pairs': language_pair,
-                'datetime': current_time  # <--- COLUMNA AÑADIDA
+                'datetime': current_time  # <--- ADDED COLUMN
             })
+        # --- END OF MODIFICATION ---
 
     if not new_data:
         return gr.Label(value="No new changes detected.", visible=True), gr.Button(visible=False)
@@ -150,6 +158,36 @@ def update_target_languages(source_lang):
         return gr.Dropdown(choices=new_choices, value=new_value, interactive=False)
 
 
+# --- NEW FUNCTION: Transcription Handler ---
+def handle_transcription_start():
+    """Shows the 'Transcribing' status label."""
+    return gr.Label(value="Transcribing... This may take a moment.", visible=True)
+
+
+def handle_transcription_complete(file_temp_obj, whisper_model):
+    """
+    Called when a file is uploaded. Runs Whisper and returns the SRT.
+    """
+    if file_temp_obj is None:
+        return None, gr.Label(value="File upload cancelled or failed.", visible=True)
+
+    print(f"Starting transcription for: {file_temp_obj.name}")
+    # Call your audio2text module
+    srt_output = generate_srt_from_file(file_temp_obj.name, whisper_model)
+
+    if srt_output.startswith("Error:"):
+        print(f"Transcription Error: {srt_output}")
+        # Returns None to the textbox and the error to the status label
+        return None, gr.Label(value=srt_output, visible=True)
+
+    print("Transcription successful.")
+    # Returns the SRT to the textbox and a success message
+    return srt_output, gr.Label(value="Transcription successful! SRT added to source text.", visible=True)
+
+
+# --- END OF NEW FUNCTION ---
+
+
 # --- Gradio Interface (Wrapped in a function) ---
 
 def create_app():
@@ -157,7 +195,7 @@ def create_app():
     Creates and returns the Gradio app instance.
     """
     with gr.Blocks(theme=gr.themes.Soft()) as demo:
-        gr.Markdown("# 🤖 FOREO SLM Text Translator")
+        gr.Markdown("# 🤖 SLM Text Translator")
         gr.Markdown("An interface to translate text between selected languages.")
 
         # --- NEW: Hidden state for original translation ---
@@ -198,8 +236,27 @@ def create_app():
                 source_text = gr.Textbox(
                     lines=10,
                     label="Source Text",
-                    placeholder="Type your text here..."
+                    placeholder="Type your text here or transcribe an audio file below..."
                 )
+
+                # --- NEW TRANSCRIPTION COMPONENTS ---
+                with gr.Row():
+                    whisper_model_dd = gr.Dropdown(
+                        label="Whisper Model",
+                        value="base",
+                        choices=["tiny", "base", "small", "medium", "large"],
+                        scale=3
+                    )
+                    transcribe_button = gr.UploadButton(
+                        "Transcribe Audio/Video 🎵",
+                        file_types=["audio", "video"],  # Allow audio and video
+                        scale=2
+                    )
+                # --- END OF NEW TRANSCRIPTION COMPONENTS ---
+
+                # --- MODIFIED: Moved the status label INSIDE the column ---
+                transcription_status = gr.Label(visible=False, show_label=False)
+                # --- END OF MODIFICATION ---
 
             with gr.Column(scale=1, min_width=100, elem_id="translate-button-col"):
                 translate_button = gr.Button(
@@ -225,6 +282,9 @@ def create_app():
                         scale=1
                     )
 
+        # --- MODIFIED: The label is now defined above, so we remove it from here ---
+        # transcription_status = gr.Label(visible=False, show_label=False)
+
         # --- Event Logic ---
 
         # 1. Update target dropdown based on source selection
@@ -235,13 +295,12 @@ def create_app():
         )
 
         # 2. When Translate is clicked, call the model
-        #    UPDATED: Now also populates 'original_translation_state'
         translate_button.click(
             fn=translate_and_clean,
             inputs=[source_text, model_name, temp, source_lang_dd, target_lang_dd],
             outputs=[
                 target_text,
-                original_translation_state,  # <--- NEW OUTPUT
+                original_translation_state,
                 save_button,
                 feedback_label
             ]
@@ -255,21 +314,32 @@ def create_app():
         )
 
         # 4. When Save is clicked, run the save function
-        #    UPDATED: Now also passes the state and languages
         save_button.click(
             fn=save_modification,
             inputs=[
                 source_text,
                 target_text,
-                original_translation_state,  # <--- NEW INPUT
-                source_lang_dd,  # <--- NEW INPUT
-                target_lang_dd  # <--- NEW INPUT
+                original_translation_state,
+                source_lang_dd,
+                target_lang_dd
             ],
             outputs=[feedback_label, save_button]
         )
 
+        # --- NEW TRANSCRIPTION EVENT LOGIC ---
+        # Use .then() to chain actions:
+        # 1. (Upload) Show "Transcribing..."
+        # 2. (Then) Execute transcription (which is slow)
+        transcribe_button.upload(
+            fn=handle_transcription_start,
+            inputs=None,
+            outputs=[transcription_status]
+        ).then(
+            fn=handle_transcription_complete,
+            inputs=[transcribe_button, whisper_model_dd],
+            outputs=[source_text, transcription_status]
+        )
+        # --- END OF NEW LOGIC ---
+
     # Returns the Gradio app for main.py to launch
     return demo
-
-# --- REMOVED if __name__ == "__main__": BLOCK ---
-# main.py is now responsible for launching the app.
