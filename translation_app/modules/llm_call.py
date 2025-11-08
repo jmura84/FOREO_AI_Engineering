@@ -36,9 +36,6 @@ def llm_translation(model_name: str, input_text: str, temp: float, source_lang: 
         "Translate the exact text provided by the user. "
         "Always assume that the entire user message is the text to be translated. "
         f"Return *only* the final {target_lang} translation. "
-
-        # --- REMOVED INSTRUCTION FOR BLANK LINES (was being ignored) ---
-
         "DO NOT add any explanations, questions, or comments. "
         "DO NOT add segment numbers. DO NOT add timestamps. "
         "DO NOT add any text that was not in the original segment. "
