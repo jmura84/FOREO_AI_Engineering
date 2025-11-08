@@ -25,6 +25,7 @@ def llm_translation(model_name: str, input_text: str, temp: float, source_lang: 
     """
     Translates the given text using the specified Ollama model and languages.
     Detects SRT format and translates segment by segment if present.
+    If not SRT, translates line by line.
     """
 
     # --- DYNAMIC PROMPT (STRICTER) ---
@@ -36,6 +37,7 @@ def llm_translation(model_name: str, input_text: str, temp: float, source_lang: 
         "Translate the exact text provided by the user. "
         "Always assume that the entire user message is the text to be translated. "
         f"Return *only* the final {target_lang} translation. "
+
         "DO NOT add any explanations, questions, or comments. "
         "DO NOT add segment numbers. DO NOT add timestamps. "
         "DO NOT add any text that was not in the original segment. "
@@ -85,8 +87,8 @@ def llm_translation(model_name: str, input_text: str, temp: float, source_lang: 
 
             # We call the LLM only with the segment text
             translation = chain.invoke({"text": text_to_translate})
-            # --- MODIFIED: We tell clean_segment this is an SRT segment ---
-            clean_trans = clean_segment(translation, is_srt_segment=True)
+            # We use AGGRESSIVE cleaning for SRT segments
+            clean_trans = clean_segment(translation, model_name, is_srt_segment=True)
 
             # We use the new variables
             translated_segments.append(
@@ -97,31 +99,27 @@ def llm_translation(model_name: str, input_text: str, temp: float, source_lang: 
         final_translation = "\n\n".join(translated_segments)
 
     else:
-        # --- NEW SIMPLE TEXT MODE (Block-by-Block) ---
-        # We split by blank lines (2 or more newlines) to translate chunk by chunk.
-        # This prevents the LLM from stopping at the first blank line.
-        print("Simple text format detected. Translating block-by-block...")
+        # --- NEW: SIMPLE TEXT MODE (Line-by-Line) ---
+        # This is the most robust way to ensure all content is translated
+        # and line structure is preserved 1-to-1.
+        print("Simple text format detected. Translating line-by-line...")
 
-        # Split by the blank lines, but *keep* the separators
-        blocks = re.split(r'(\n{2,})', input_text)
-        translated_text_parts = []
+        lines = input_text.split('\n')
+        translated_lines = []
 
-        for part in blocks:
-            if re.match(r'^\n{2,}$', part):
-                # This is a blank line separator, just add it back
-                translated_text_parts.append(part)
-            elif part.strip() == "":
-                # This is an empty string (e.g., from start/end), ignore it
-                continue
+        for line in lines:
+            if line.strip() == "":
+                # This is a blank line, just add it back
+                translated_lines.append("")
             else:
-                # This is a block of text to translate
-                translation = chain.invoke({"text": part})
-                # We use the GENTLE clean (is_srt_segment=False) because this
-                # block might have its own *single* newlines we want to keep.
-                clean_trans = clean_segment(translation, is_srt_segment=False)
-                translated_text_parts.append(clean_trans)
+                # This is a line of text to translate
+                translation = chain.invoke({"text": line})
+                # We use AGGRESSIVE (is_srt_segment=True) cleaning
+                # because each line should be a single line (no newlines).
+                clean_trans = clean_segment(translation, model_name, is_srt_segment=True)
+                translated_lines.append(clean_trans)
 
-        final_translation = "".join(translated_text_parts)
+        final_translation = "\n".join(translated_lines)
 
     # --- END DETECTION LOGIC ---
 
@@ -133,10 +131,12 @@ def llm_translation(model_name: str, input_text: str, temp: float, source_lang: 
     return final_translation
 
 
-def clean_segment(text, is_srt_segment=False):
+# --- MODIFIED: Function signature ---
+def clean_segment(text, model_name, is_srt_segment=False):
     '''
     Cleans some translated segments from unwanted spaces and line breaks.
     :param text: The text to clean
+    :param model_name: The name of the model (not currently used, but kept for future)
     :param is_srt_segment: Boolean, applies aggressive cleaning for SRT segments
     :return: Cleaned text
     '''
@@ -146,15 +146,15 @@ def clean_segment(text, is_srt_segment=False):
     text = str(text)
 
     # 1. "Un-escape" literal newlines (e.g., "\\n" -> "\n")
-    # This is safe for both modes.
+    # This is safe for all modes.
     text = text.replace('\\n', '\n')
 
     # 2. Remove whitespace from the *absolute* beginning and end.
-    # This is safe for both modes.
+    # This is safe for all modes.
     text = text.strip()
 
     if is_srt_segment:
-        # --- AGGRESSIVE CLEANING for SRT segments ---
+        # --- AGGRESSIVE CLEANING for SRT segments or Single Lines ---
 
         # 3a. NEW ANTI-HALLUCINATION LOGIC:
         # We assume the real translation ends at the first double newline.
@@ -162,26 +162,30 @@ def clean_segment(text, is_srt_segment=False):
             text = text.split("\n\n")[0]
 
         # 4a. Replace multiple newlines *within* the segment with a single space.
-        # (A single SRT segment should not have hard line breaks)
+        # (A single SRT segment or a single line translation should not have hard line breaks)
         text = re.sub(r'\n{1,}', ' ', text)
 
         # 5a. Replace multiple spaces/tabs with a single one.
         text = re.sub(r'[ \t]+', ' ', text)
+        text = text.strip()  # Clean again after regex
 
     else:
-        # --- GENTLE CLEANING for Simple Text ---
-        # We must preserve line breaks and blank lines.
+        # --- GENTLE CLEANING for non-SRT text ---
+        # NOTE: This block is no longer used by llm_translation,
+        # but kept in case it's needed elsewhere.
+
+        # --- NEW: Fix for models that add random \n\n ---
+        if "\n\n" in text:
+            text = re.sub(r'\n{2,}', '\n', text)
+        # --- END FIX ---
 
         lines = text.split('\n')
         cleaned_lines = []
         for line in lines:
-            # For each line, replace multiple spaces with one, then strip.
-            # This turns a "blank line with spaces" into "" (an empty string).
-            # This preserves the line count.
             cleaned_line = re.sub(r'[ \t]+', ' ', line).strip()
             cleaned_lines.append(cleaned_line)
 
-        # 4b. Re-join the lines. Blank lines are preserved.
+        # 4c. Re-join the lines. Blank lines are preserved.
         text = "\n".join(cleaned_lines)
 
     return text
@@ -189,6 +193,8 @@ def clean_segment(text, is_srt_segment=False):
 
 if __name__ == "__main__":
     model = "gemma3:4b-it-qat"
+    model_gemma2 = "gemma2:9b"
+    model_gemma3 = "gemma3:4b"
     temp = 0.3
     source = "English"
     target = "Spanish"
@@ -207,13 +213,17 @@ if __name__ == "__main__":
     print(f"\n🔹{source} to {target} Translation (SRT Mode):\n{translation_srt}")
 
     # Test 2: Simple Text Mode (with blank lines)
-    simple_text = "LUNA™ 4 plus\n\nNear-infrared, red LED cleansing & microcurrent.\n   For aging skin."
+    simple_text = "LUNA™ 4 plus\n\nNear-infrared, red LED cleansing & microcurrent.\nFor aging skin."
     translation_simple = llm_translation(model, simple_text, temp, source, target)
-    print(f"\n🔹{source} to {target} Translation (Simple Mode):\n{translation_simple}")
+    print(f"\n🔹{source} to {target} Translation (Simple/Line-by-Line Mode):\n{translation_simple}")
 
     # Test 3: Clean_segment logic test
     print("\n🔹Testing clean_segment...")
     srt_hallucination = "  Translated text.  \n\n2\n00:00:05,000 --> ...  "
     simple_with_blanks = "  Line 1\n    \n  Line 3  "
-    print(f"SRT Clean Test: '{clean_segment(srt_hallucination, is_srt_segment=True)}'")
-    print(f"Simple Clean Test (preserves newlines): '{clean_segment(simple_with_blanks, is_srt_segment=False)}'")
+    gemma_messy_paragraphs = "This is a\n\ntranslation from Gemma."
+
+    print(f"SRT Clean Test (Aggressive): '{clean_segment(srt_hallucination, model, is_srt_segment=True)}'")
+    print(f"Gemma Messy Line Test (Aggressive): '{clean_segment('Hola\nadiós', model, is_srt_segment=True)}'")
+    print(f"Simple Clean Test (Gentle): '{clean_segment(simple_with_blanks, model, is_srt_segment=False)}'")
+    print(f"Gemma 2/3 Bug Test (Gentle): '{clean_segment(gemma_messy_paragraphs, model_gemma2, is_srt_segment=False)}'")
