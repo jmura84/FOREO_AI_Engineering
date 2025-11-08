@@ -27,6 +27,25 @@ CSV_FILE_PATH = os.path.join(root_path, 'data', 'user_mods.csv')
 # --- Define Language List ---
 LANGUAGES = ["English", "Spanish", "Polish", "Turkish"]
 
+# --- NEW: Custom CSS ---
+# We define the CSS styles here as a string.
+CUSTOM_CSS = """
+/* --- Green Translate Button --- */
+#translate-button {
+    background: linear-gradient(to right, #65B069, #549C58) !important; /* Green Gradient */
+    color: white !important;
+    border: none !important;
+}
+#translate-button:hover {
+    background: linear-gradient(to right, #75C07A, #65B069) !important;
+}
+
+/* --- MODIFICATION: Removed Red Borders --- */
+"""
+
+
+# --- END: Custom CSS ---
+
 
 # --- UI Logic Functions ---
 
@@ -206,7 +225,8 @@ def create_app():
     """
     Creates and returns the Gradio app instance.
     """
-    with gr.Blocks(theme=gr.themes.Soft()) as demo:
+    # --- MODIFIED: Added css=CUSTOM_CSS ---
+    with gr.Blocks(theme=gr.themes.Soft(), css=CUSTOM_CSS) as demo:
         # --- MODIFICATION: Updated titles ---
         gr.Markdown("# 🤖 FOREO SLM Translator")
         gr.Markdown("A multimodal and multilingual translator")
@@ -220,7 +240,7 @@ def create_app():
             model_name = gr.Dropdown(
                 label="Ollama Model",
                 value="gemma3:4b-it-qat",
-                choices=["gemma2:9b", "gemma3:4b", "gemma3:4b-it-qat", "thinkverse/towerinstruct:latest"]
+                choices=["gemma2:9b", "gma3:4b", "gemma3:4b-it-qat", "thinkverse/towerinstruct:latest"]
             )
             temp = gr.Slider(
                 label="Temperature",
@@ -238,10 +258,12 @@ def create_app():
                 choices=LANGUAGES,
                 value="English"
             )
+            # --- MODIFIED: Removed elem_id ---
             target_lang_dd = gr.Dropdown(
                 label="Target Language",
                 choices=["Spanish", "Polish", "Turkish"],  # Initial state (Source is English)
                 value="Spanish"
+                # elem_id="target-lang-dd" # ID no longer needed
             )
 
         # --- MODIFICATION: Main Text Boxes Row ---
@@ -256,17 +278,21 @@ def create_app():
                 )
 
             with gr.Column(scale=1, min_width=100, elem_id="translate-button-col"):
+                # --- MODIFIED: Added elem_id, removed variant ---
                 translate_button = gr.Button(
                     value="Translate ➡️",
-                    variant="primary",
-                    size="lg"
+                    # variant="primary", # Removed, CSS will handle it
+                    size="lg",
+                    elem_id="translate-button"  # ID for CSS
                 )
 
             with gr.Column(scale=5):
+                # --- MODIFIED: Removed elem_id ---
                 target_text = gr.Textbox(
                     lines=15,  # Increased lines
                     label="Translated Text",
                     interactive=True  # Editable
+                    # elem_id="target-text-box" # ID no longer needed
                 )
 
         # --- MODIFICATION: New Row for Controls Below ---
