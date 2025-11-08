@@ -240,7 +240,7 @@ def create_app():
             model_name = gr.Dropdown(
                 label="Ollama Model",
                 value="gemma3:4b-it-qat",
-                choices=["gemma2:9b", "gma3:4b", "gemma3:4b-it-qat", "thinkverse/towerinstruct:latest"]
+                choices=["gemma2:9b", "gemma3:4b", "gemma3:4b-it-qat", "thinkverse/towerinstruct:latest"]
             )
             temp = gr.Slider(
                 label="Temperature",
