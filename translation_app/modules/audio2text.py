@@ -95,9 +95,8 @@ def generate_srt_from_file(media_file_path: str, model_name: str = "base") -> st
         return f"Error: {e}"
 
 
-# --- Test block ---
-# You can run this file directly to test it:
-# python modules/srt_generator.py
+
+
 if __name__ == "__main__":
     print("Testing SRT Generator Module...")
 
