@@ -117,10 +117,22 @@ def save_modification(source_text, modified_target_text, original_translation, s
         else:
             df_combined = df_new
 
-        # --- UPDATED DEDUPLICATION LOGIC ---
-        # Key is now 'source' + 'language_pairs'
-        df_combined.drop_duplicates(subset=['source', 'language_pairs'], keep='last', inplace=True)
-        # --- END OF DEDUPLICATION LOGIC ---
+        # --- MODIFICATION: NORMALIZED DEDUPLICATION LOGIC ---
+
+        # 1. Create a temporary 'source_normalized' column
+        #    This key is lowercase, stripped of whitespace, and trailing punctuation
+        df_combined['source_normalized'] = df_combined['source'].astype(str) \
+            .str.lower() \
+            .str.strip() \
+            .str.rstrip('.,!?;')
+
+        # 2. Use this normalized key for deduplication
+        df_combined.drop_duplicates(subset=['source_normalized', 'language_pairs'], keep='last', inplace=True)
+
+        # 3. Drop the temporary column before saving
+        df_combined.drop(columns=['source_normalized'], inplace=True)
+
+        # --- END OF MODIFICATION ---
 
         df_combined.to_csv(CSV_FILE_PATH, index=False, encoding='utf-8')
 
@@ -195,8 +207,10 @@ def create_app():
     Creates and returns the Gradio app instance.
     """
     with gr.Blocks(theme=gr.themes.Soft()) as demo:
-        gr.Markdown("# 🤖 SLM Text Translator")
-        gr.Markdown("An interface to translate text between selected languages.")
+        # --- MODIFICATION: Updated titles ---
+        gr.Markdown("# 🤖 FOREO SLM Translator")
+        gr.Markdown("A multimodal and multilingual translator")
+        # --- END OF MODIFICATION ---
 
         # --- NEW: Hidden state for original translation ---
         original_translation_state = gr.State()
@@ -230,33 +244,16 @@ def create_app():
                 value="Spanish"
             )
 
-        # --- Text Boxes Row ---
+        # --- MODIFICATION: Main Text Boxes Row ---
+        # This row will *only* contain the text boxes and the translate button
+        # for equal height alignment.
         with gr.Row(equal_height=True):
             with gr.Column(scale=5):
                 source_text = gr.Textbox(
-                    lines=10,
+                    lines=15,  # Increased lines
                     label="Source Text",
                     placeholder="Type your text here or transcribe an audio file below..."
                 )
-
-                # --- NEW TRANSCRIPTION COMPONENTS ---
-                with gr.Row():
-                    whisper_model_dd = gr.Dropdown(
-                        label="Whisper Model",
-                        value="base",
-                        choices=["tiny", "base", "small", "medium", "large"],
-                        scale=3
-                    )
-                    transcribe_button = gr.UploadButton(
-                        "Transcribe Audio/Video 🎵",
-                        file_types=["audio", "video"],  # Allow audio and video
-                        scale=2
-                    )
-                # --- END OF NEW TRANSCRIPTION COMPONENTS ---
-
-                # --- MODIFIED: Moved the status label INSIDE the column ---
-                transcription_status = gr.Label(visible=False, show_label=False)
-                # --- END OF MODIFICATION ---
 
             with gr.Column(scale=1, min_width=100, elem_id="translate-button-col"):
                 translate_button = gr.Button(
@@ -267,12 +264,40 @@ def create_app():
 
             with gr.Column(scale=5):
                 target_text = gr.Textbox(
-                    lines=10,
+                    lines=15,  # Increased lines
                     label="Translated Text",
                     interactive=True  # Editable
                 )
 
-                # Save button and feedback label
+        # --- MODIFICATION: New Row for Controls Below ---
+        # This row contains the controls that were previously
+        # squishing the text boxes.
+        with gr.Row():
+            # --- Left Column: Whisper Controls ---
+            with gr.Column(scale=5):
+                with gr.Row():
+                    with gr.Column(scale=3):
+                        whisper_model_dd = gr.Dropdown(
+                            label="Whisper Model",
+                            value="base",
+                            choices=["tiny", "base", "small", "medium", "large"],
+                        )
+                    with gr.Column(scale=2, min_width=220):
+                        # Add a "dummy" label (non-breaking space)
+                        # to align vertically with the dropdown's label
+                        gr.Markdown("&nbsp;")
+                        transcribe_button = gr.UploadButton(
+                            "Transcribe Audio/Video 🎵",
+                            file_types=["audio", "video"],
+                        )
+                transcription_status = gr.Label(visible=False, show_label=False)
+
+            # --- Middle Column: Empty ---
+            with gr.Column(scale=1, min_width=100):
+                pass  # Empty space below translate button
+
+            # --- Right Column: Save/Feedback Controls ---
+            with gr.Column(scale=5):
                 with gr.Row():
                     feedback_label = gr.Label(visible=False, scale=3)
                     save_button = gr.Button(
@@ -281,9 +306,7 @@ def create_app():
                         visible=False,
                         scale=1
                     )
-
-        # --- MODIFIED: The label is now defined above, so we remove it from here ---
-        # transcription_status = gr.Label(visible=False, show_label=False)
+        # --- END OF LAYOUT MODIFICATION ---
 
         # --- Event Logic ---
 
