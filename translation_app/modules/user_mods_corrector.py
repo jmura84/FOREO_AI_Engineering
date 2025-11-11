@@ -46,7 +46,7 @@ def normalize_text_for_lookup(text):
     """
     Normalizes a single line of text for glossary lookup.
     """
-    return text.lower().strip().rstrip('.,!?;')
+    return text.lower().strip().rstrip('.,!;')
 
 
 def review_and_correct(raw_translation, source_text, csv_path, model_name, temp, source_lang, target_lang):
