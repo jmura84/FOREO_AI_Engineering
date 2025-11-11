@@ -5,14 +5,18 @@ import pandas as pd
 from datetime import datetime
 
 try:
+    # --- STEP 1: Import Agent 1 (Translator) ---
     from modules.llm_call import llm_translation, clean_segment
-    # --- MODIFIED: Import the transcription module ---
+
+    # --- STEP 2: Import Agent 2 (Post-Editor) ---
+    from modules.posteditor_agent import review_and_correct
+
+    # --- Import Transcriber ---
     from modules.audio2text import generate_srt_from_file
 except ImportError:
-    # --- MODIFIED: Updated error message ---
-    print(f"Error: ui.gradio_ui could not import 'modules.llm_call' or 'modules.audio2text'.")
+    print(
+        f"Error: ui.gradio_ui could not import 'modules.llm_call', 'modules.posteditor_agent' or 'modules.audio2text'.")
     print("Make sure to run the app using 'main.py' from the project root.")
-    # Exiting is not ideal, but prevents a bigger crash
     raise
 
 # --- Define CSV Path (robustly) ---
@@ -27,46 +31,40 @@ CSV_FILE_PATH = os.path.join(root_path, 'data', 'user_mods.csv')
 # --- Define Language List ---
 LANGUAGES = ["English", "Spanish", "Polish", "Turkish"]
 
-# --- NEW: Custom CSS ---
-# We define the CSS styles here as a string.
-CUSTOM_CSS = """
-/* --- Green Translate Button --- */
-#translate-button {
-    background: linear-gradient(to right, #65B069, #549C58) !important; /* Green Gradient */
-    color: white !important;
-    border: none !important;
-}
-#translate-button:hover {
-    background: linear-gradient(to right, #75C07A, #65B069) !important;
-}
-
-/* --- MODIFICATION: Removed Red Borders --- */
-"""
-
-
-# --- END: Custom CSS ---
-
 
 # --- UI Logic Functions ---
 
 def translate_and_clean(text, model, temperature, source_lang, target_lang):
     """
-    Gradio wrapper: Calls the translation.
-    The llm_translation function now handles its own cleaning.
+    Gradio wrapper: Calls the two-agent sequential pipeline.
+    1. Calls llm_translation (Agent 1) for a raw translation.
+    2. Calls review_and_correct (Agent 2) to post-edit the raw translation.
     """
     if not text:
         return "", "", gr.Button(visible=False), gr.Label(visible=False)
 
-    # Pass all arguments to the translation function
-    translation = llm_translation(model, text, temperature, source_lang, target_lang)
+    # --- STEP 1: Call Agent 1 (Raw Translation) ---
+    print("Orchestrator: Calling Agent 1 (Raw Translation)...")
+    raw_translation = llm_translation(model, text, temperature, source_lang, target_lang)
 
-    # --- CORRECTION ---
-    # We NO LONGER call clean_segment(translation) here.
-    # llm_translation is smart enough to handle SRT or simple text.
-    clean_trans = translation
-    # --- END OF CORRECTION ---
+    # --- STEP 2: Call Agent 2 (Post-Editing and Review) ---
+    print("Orchestrator: Calling Agent 2 (Post-Editing and Review)...")
+    final_translation = review_and_correct(
+        raw_translation=raw_translation,
+        source_text=text,
+        csv_path=CSV_FILE_PATH,
+        model_name=model,
+        temp=temperature,
+        source_lang=source_lang,
+        target_lang=target_lang
+    )
+
+    # The final result (final_translation) is already clean.
+    # We don't need to call clean_segment here.
+    clean_trans = final_translation
 
     # (1) target_text, (2) original_translation_state, (3) save_button, (4) feedback_label
+    # We save the *final translation* in the state, not the raw one.
     return clean_trans, clean_trans, gr.Button(visible=False), gr.Label(visible=False)
 
 
@@ -96,9 +94,6 @@ def save_modification(source_text, modified_target_text, original_translation, s
     # 3. Iterate and find differences
     for i in range(len(modified_target_lines)):
 
-        # If the modified line is different from the original
-        # Or if the modified line is new (longer than the original)
-
         line_changed = False
         if i >= len(original_target_lines):
             # It's a new line added by the user
@@ -107,7 +102,6 @@ def save_modification(source_text, modified_target_text, original_translation, s
             # It's an existing line that has been modified
             line_changed = True
 
-        # --- MODIFICATION ---
         # If the line changed AND there is a corresponding source line AND
         # the source line is NOT EMPTY, then save it.
         if line_changed and i < len(source_lines) and source_lines[i].strip() != "":
@@ -117,7 +111,6 @@ def save_modification(source_text, modified_target_text, original_translation, s
                 'language_pairs': language_pair,
                 'datetime': current_time  # <--- ADDED COLUMN
             })
-        # --- END OF MODIFICATION ---
 
     if not new_data:
         return gr.Label(value="No new changes detected.", visible=True), gr.Button(visible=False)
@@ -136,14 +129,15 @@ def save_modification(source_text, modified_target_text, original_translation, s
         else:
             df_combined = df_new
 
-        # --- MODIFICATION: NORMALIZED DEDUPLICATION LOGIC ---
+        # --- MODIFICATION: NORMALIZED DEDUPLICATION LOGIC (FIXED) ---
 
         # 1. Create a temporary 'source_normalized' column
         #    This key is lowercase, stripped of whitespace, and trailing punctuation
+        #    (Excluding '?' as requested)
         df_combined['source_normalized'] = df_combined['source'].astype(str) \
             .str.lower() \
             .str.strip() \
-            .str.rstrip('.,!?;')
+            .str.rstrip('.,!;')  # <--- CORRECTED: '?' removed
 
         # 2. Use this normalized key for deduplication
         df_combined.drop_duplicates(subset=['source_normalized', 'language_pairs'], keep='last', inplace=True)
@@ -225,8 +219,21 @@ def create_app():
     """
     Creates and returns the Gradio app instance.
     """
-    # --- MODIFIED: Added css=CUSTOM_CSS ---
-    with gr.Blocks(theme=gr.themes.Soft(), css=CUSTOM_CSS) as demo:
+
+    # --- CUSTOM CSS ---
+    # 1. Green Translate Button
+    custom_css = """
+    #translate_button {
+        background: #4CAF50 !important; /* Green */
+        color: white !important;
+    }
+    #translate_button:hover {
+        background: #45a049 !important; /* Darker Green */
+    }
+    """
+    # --- END CUSTOM CSS ---
+
+    with gr.Blocks(theme=gr.themes.Soft(), css=custom_css) as demo:
         # --- MODIFICATION: Updated titles ---
         gr.Markdown("# 🤖 FOREO SLM Translator")
         gr.Markdown("A multimodal and multilingual translator")
@@ -258,12 +265,10 @@ def create_app():
                 choices=LANGUAGES,
                 value="English"
             )
-            # --- MODIFIED: Removed elem_id ---
             target_lang_dd = gr.Dropdown(
                 label="Target Language",
                 choices=["Spanish", "Polish", "Turkish"],  # Initial state (Source is English)
                 value="Spanish"
-                # elem_id="target-lang-dd" # ID no longer needed
             )
 
         # --- MODIFICATION: Main Text Boxes Row ---
@@ -278,21 +283,18 @@ def create_app():
                 )
 
             with gr.Column(scale=1, min_width=100, elem_id="translate-button-col"):
-                # --- MODIFIED: Added elem_id, removed variant ---
                 translate_button = gr.Button(
                     value="Translate ➡️",
-                    # variant="primary", # Removed, CSS will handle it
-                    size="lg",
-                    elem_id="translate-button"  # ID for CSS
+                    variant="primary",  # CSS overrides variant
+                    size="sm",  # <--- CORRECTED: "lg" to "sm"
+                    elem_id="translate_button"  # <--- ID for CSS
                 )
 
             with gr.Column(scale=5):
-                # --- MODIFIED: Removed elem_id ---
                 target_text = gr.Textbox(
                     lines=15,  # Increased lines
                     label="Translated Text",
                     interactive=True  # Editable
-                    # elem_id="target-text-box" # ID no longer needed
                 )
 
         # --- MODIFICATION: New Row for Controls Below ---
