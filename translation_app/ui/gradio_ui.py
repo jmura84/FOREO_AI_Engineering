@@ -13,10 +13,14 @@ try:
 
     # --- Import Transcriber ---
     from modules.audio2text import generate_srt_from_file
+
+    # --- NEW: Import Image Transcriber ---
+    from modules.img_transcriptor import image_ocr_llm_langchain
+
 except ImportError:
     # --- Updated error message ---
     print(
-        f"Error: ui.gradio_ui could not import 'modules.llm_call', 'modules.user_mods_corrector' or 'modules.audio2text'.")
+        f"Error: ui.gradio_ui could not import modules. Check 'llm_call', 'user_mods_corrector', 'audio2text', or 'img_transcriptor'.")
     print("Make sure to run the app using 'main.py' from the project root.")
     raise
 
@@ -185,6 +189,44 @@ def handle_transcription_complete(file_temp_obj, whisper_model):
     return srt_output, gr.Label(value="Transcription successful! SRT added to source text.", visible=True)
 
 
+# --- NEW IMAGE HANDLER FUNCTIONS ---
+def handle_image_transcription_start():
+    """Shows the 'Transcribing' status label."""
+    # Re-use the same status label
+    return gr.Label(value="Transcribing Image... This may take a moment.", visible=True)
+
+
+def handle_image_transcription_complete(file_temp_obj, source_lang):
+    """
+    Called when an image is uploaded. Runs the multimodal LLM.
+    """
+    if file_temp_obj is None:
+        return None, gr.Label(value="Image upload cancelled or failed.", visible=True)
+
+    print(f"Starting image transcription for: {file_temp_obj.name}")
+
+    # --- Hardcode the model name as requested ---
+    model_name = "gemma3:12b"
+
+    # Call the img_transcriptor module function
+    transcription = image_ocr_llm_langchain(
+        model_name=model_name,
+        input_img_path=file_temp_obj.name,  # Pass the temp file path
+        source_lang=source_lang
+    )
+
+    if transcription.startswith("Error:"):
+        print(f"Image Transcription Error: {transcription}")
+        return None, gr.Label(value=transcription, visible=True)
+
+    print("Image transcription successful.")
+    # Return transcription to source_text and a success message
+    return transcription, gr.Label(value="Image transcription successful! Text added to source.", visible=True)
+
+
+# --- END OF NEW FUNCTIONS ---
+
+
 def create_app():
     """
     Creates and returns the Gradio app instance.
@@ -210,7 +252,8 @@ def create_app():
             model_name = gr.Dropdown(
                 label="Ollama Model",
                 value="gemma3:4b-it-qat",
-                choices=["gemma2:9b", "gemma3:4b", "gemma3:4b-it-qat", "thinkverse/towerinstruct:latest"]
+                # Added gemma3:12b to the list
+                choices=["gemma2:9b", "gemma3:12b", "gemma3:4b", "gemma3:4b-it-qat", "thinkverse/towerinstruct:latest"]
             )
             temp = gr.Slider(
                 label="Temperature",
@@ -258,20 +301,35 @@ def create_app():
 
         with gr.Row():
             with gr.Column(scale=5):
+                # --- MODIFIED: Re-arranged layout ---
+
+                # --- NEW: Row for Buttons ---
                 with gr.Row():
-                    with gr.Column(scale=3):
-                        whisper_model_dd = gr.Dropdown(
-                            label="Whisper Model",
-                            value="base",
-                            choices=["tiny", "base", "small", "medium", "large"],
-                        )
-                    with gr.Column(scale=2, min_width=220):
-                        gr.Markdown("&nbsp;")
+                    with gr.Column(scale=1):
                         transcribe_button = gr.UploadButton(
                             "Transcribe Audio/Video 🎵",
                             file_types=["audio", "video"],
                         )
+                    with gr.Column(scale=1):
+                        transcribe_image_button = gr.UploadButton(  # <--- NEW BUTTON
+                            "Transcribe Image (OCR) 🖼️",
+                            file_types=["image"],  # Only allow images
+                        )
+
+                # --- NEW: Row for Controls/Labels Underneath ---
+                with gr.Row():
+                    with gr.Column(scale=1):
+                        whisper_model_dd = gr.Dropdown(
+                            label="Whisper Model",  # Simplified label
+                            value="base",
+                            choices=["tiny", "base", "small", "medium", "large"],
+                        )
+                    with gr.Column(scale=1):
+                        gr.Markdown("OCR Model (Fixed: gemma3:12b)")
+
+                # This status label is now shared by both buttons
                 transcription_status = gr.Label(visible=False, show_label=False)
+                # --- END MODIFICATION ---
 
             with gr.Column(scale=1, min_width=100):
                 pass
@@ -330,5 +388,19 @@ def create_app():
             inputs=[transcribe_button, whisper_model_dd],
             outputs=[source_text, transcription_status]
         )
+
+        # --- NEW IMAGE TRANSCRIPTION EVENT LOGIC ---
+        transcribe_image_button.upload(
+            fn=handle_image_transcription_start,
+            inputs=None,
+            outputs=[transcription_status]
+        ).then(
+            fn=handle_image_transcription_complete,
+            # Inputs: the button itself (for file) and the source language
+            inputs=[transcribe_image_button, source_lang_dd],
+            # Outputs: the source text box and the status label
+            outputs=[source_text, transcription_status]
+        )
+        # --- END OF NEW LOGIC ---
 
     return demo

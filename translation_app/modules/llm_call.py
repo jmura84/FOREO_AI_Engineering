@@ -1,7 +1,6 @@
 import pandas as pd
 from langchain_ollama.llms import OllamaLLM
-from langchain.chains import LLMChain
-from langchain.prompts import (ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate)
+from langchain_core.prompts import (ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate)
 import torch
 import logging
 import re
@@ -26,7 +25,7 @@ def llm_translation(model_name: str, input_text: str, temp: float, source_lang: 
     (Agent 1)
     Translates the given text using the specified Ollama model and languages.
     This provides the "Raw Translation".
-    It splits text by paragraphs (double newlines) for better coherence.
+    It handles SRT and Simple Text (line-by-line) differently.
     """
 
     # --- DYNAMIC PROMPT (STRICTER) ---
@@ -43,7 +42,7 @@ def llm_translation(model_name: str, input_text: str, temp: float, source_lang: 
         "DO NOT add segment numbers. DO NOT add timestamps. "
         "DO NOT add any text that was not in the original segment. "
         "Your response must be *only* the translated text and nothing else."
-        "Preserve simple line breaks (single \n) if they exist."
+        # Removed "Preserve simple line breaks" as we now handle this 1 line at a time.
     )
     human_template = "{text}"
     # --- END DYNAMIC PROMPT ---
@@ -63,6 +62,7 @@ def llm_translation(model_name: str, input_text: str, temp: float, source_lang: 
         HumanMessagePromptTemplate.from_template(human_template),
     ])
 
+    # We don't use LLMChain, we use the modern LCEL (pipe) syntax
     chain = chat_prompt | llm
 
     # Start timing:
@@ -70,8 +70,6 @@ def llm_translation(model_name: str, input_text: str, temp: float, source_lang: 
     print(f"Agent 1: Translating from {source_lang} to {target_lang} with {model_name} @ temp={temp}...")
 
     # --- SRT DETECTION LOGIC ---
-    # Regex to find an SRT segment (number, time, text)
-    # re.DOTALL makes '.' match newlines as well
     srt_regex = re.compile(
         r'(\d+)\n(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})\n(.+?)(?=\n\n|\Z)',
         re.DOTALL
@@ -84,42 +82,44 @@ def llm_translation(model_name: str, input_text: str, temp: float, source_lang: 
         print(f"Agent 1: SRT format detected. Translating {len(matches)} segments...")
         translated_segments = []
         for match in matches:
-            # Renaming variables to avoid conflict
             number, srt_start, srt_end, text_to_translate = match.groups()
 
-            # We call the LLM only with the segment text
-            translation = chain.invoke({"text": text_to_translate})
-            # We use AGGRESSIVE cleaning for SRT segments
-            clean_trans = clean_segment(translation, model_name, is_srt_segment=True)
+            # translation_output is a 'str'
+            translation_output = chain.invoke({"text": text_to_translate})
 
-            # We use the new variables
+            # We use AGGRESSIVE cleaning for SRT segments
+            clean_trans = clean_segment(translation_output, model_name, is_srt_segment=True)
+
             translated_segments.append(
                 f"{number}\n{srt_start} --> {srt_end}\n{clean_trans}"
             )
 
-        # We join all segments with the SRT double newline
         final_translation = "\n\n".join(translated_segments)
 
     else:
-        # --- NEW: SIMPLE TEXT MODE (Paragraph-by-Paragraph) ---
-        # We split by double newlines to translate coherent blocks.
-        print("Agent 1: Simple text format detected. Translating paragraph-by-paragraph...")
+        # --- MODIFIED: SIMPLE TEXT MODE (Line-by-Line) ---
+        # This is the most robust way to ensure all content is translated
+        # and line structure is preserved 1-to-1, identical to the source.
+        print("Agent 1: Simple text format detected. Translating line-by-line...")
 
-        paragraphs = input_text.split('\n\n')
-        translated_paragraphs = []
+        lines = input_text.split('\n')
+        translated_lines = []
 
-        for para in paragraphs:
-            if para.strip() == "":
-                # This is a blank paragraph (a \n\n), just add it back
-                translated_paragraphs.append("")
+        for line in lines:
+            if line.strip() == "":
+                # This is a blank line, just add it back
+                translated_lines.append("")
             else:
-                # This is a paragraph of text to translate
-                translation = chain.invoke({"text": para})
-                # We use GENTLE cleaning for paragraphs
-                clean_trans = clean_segment(translation, model_name, is_srt_segment=False)
-                translated_paragraphs.append(clean_trans)
+                # This is a line of text to translate
+                translation_output = chain.invoke({"text": line})
+                # We use AGGRESSIVE (is_srt_segment=True) cleaning
+                # because each line should be a single line (no newlines).
+                clean_trans = clean_segment(translation_output, model_name, is_srt_segment=True)
+                translated_lines.append(clean_trans)
 
-        final_translation = "\n\n".join(translated_paragraphs)
+        # Rebuild the text with the exact same line structure
+        final_translation = "\n".join(translated_lines)
+        # --- END OF MODIFICATION ---
 
     # --- END DETECTION LOGIC ---
 
@@ -145,23 +145,19 @@ def clean_segment(text, model_name, is_srt_segment=False):
     text = str(text)
 
     # 1. "Un-escape" literal newlines (e.g., "\\n" -> "\n")
-    # This is safe for all modes.
     text = text.replace('\\n', '\n')
 
     # 2. Remove whitespace from the *absolute* beginning and end.
-    # This is safe for all modes.
     text = text.strip()
 
     if is_srt_segment:
         # --- AGGRESSIVE CLEANING for SRT segments or Single Lines ---
 
         # 3a. NEW ANTI-HALLUCINATION LOGIC:
-        # We assume the real translation ends at the first double newline.
         if "\n\n" in text:
             text = text.split("\n\n")[0]
 
         # 4a. Replace multiple newlines *within* the segment with a single space.
-        # (A single SRT segment or a single line translation should not have hard line breaks)
         text = re.sub(r'\n{1,}', ' ', text)
 
         # 5a. Replace multiple spaces/tabs with a single one.
@@ -170,6 +166,8 @@ def clean_segment(text, model_name, is_srt_segment=False):
 
     else:
         # --- GENTLE CLEANING for non-SRT text (paragraphs) ---
+        # NOTE: This block is no longer used by llm_translation,
+        # but kept in case it's needed elsewhere.
 
         # 3b. Fix for models that add random \n\n inside a paragraph
         if "\n\n" in text:
@@ -211,4 +209,4 @@ if __name__ == "__main__":
     # Test 2: Simple Text Mode (with paragraph breaks)
     simple_text = "LUNA™ 4 plus\nNear-infrared, red LED cleansing & microcurrent.\nFor aging skin.\n\nFAQ™ 202"
     translation_simple = llm_translation(model, simple_text, temp, source, target)
-    print(f"\n🔹{source} to {target} Translation (Paragraph Mode):\n{translation_simple}")
+    print(f"\n🔹{source} to {target} Translation (Line-by-Line Mode):\n{translation_simple}")
