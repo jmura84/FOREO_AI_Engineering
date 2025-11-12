@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/translation_app/modules/img_transcriptor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/translation_app/data/user_mods_tm.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/translation_app/modules/llm_call.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/modules/llm_call.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/translation_app/modules/user_mods_corrector.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/modules/user_mods_corrector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/translation_app/ui/gradio_ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/ui/gradio_ui.py" afterDir="false" />
-    </list>
+    <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
