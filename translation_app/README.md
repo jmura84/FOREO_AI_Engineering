@@ -35,12 +35,11 @@ translation_app/
 │   ├── img_transcriptor.py     (OCR processor for Images)
 │   ├── llm_call.py             (Agent 1: Raw NMT Translator)
 │   ├── user_mods_corrector.py   (Agent 2: Python-based TM Corrector)
-│   ├── __init__.py
-│   └── rag/
+│── rag/
 ├── ui/
 │   ├── gradio_ui.py            (All UI logic and orchestration)
-│   ├── __init__.py
 ├── .gitignore
+├──__init__.py
 ├── main.py                     <-- 🚀 Run this file!
 ├── README.md
 └── requirements.txt
