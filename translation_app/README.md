@@ -68,10 +68,6 @@ This application is **entirely dependent on Ollama** to function.
     ollama pull thinkverse/towerinstruct:latest
     ```
     
-# --- Image Transcription (OCR) LLM ---
-# (gemma3:12b is also used for this,
-# so no extra download is needed if pulled above)
-    
 ### Step 2: Install Python Dependencies
 
 1.  **Create a Virtual Environment:** (Recommended)
