@@ -288,7 +288,7 @@ def create_app():
                 translate_button = gr.Button(
                     value="Translate ➡️",
                     variant="primary",
-                    size="sm",  # Compact button
+                    size="md",  # Compact button
                     elem_id="translate_button"
                 )
 
