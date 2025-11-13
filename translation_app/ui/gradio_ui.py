@@ -281,7 +281,7 @@ def create_app():
                 source_text = gr.Textbox(
                     lines=15,
                     label="Source Text",
-                    placeholder="Type your text here or transcribe an audio file below..."
+                    placeholder="Type your text here or transcribe a video, an audio, or an image file below..."
                 )
 
             with gr.Column(scale=1, min_width=100, elem_id="translate-button-col"):
