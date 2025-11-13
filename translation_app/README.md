@@ -98,8 +98,9 @@ This application is **entirely dependent on Ollama** to function.
 
 Once Ollama is running and your Python dependencies are installed, launch the app by running `main.py` from the project root (`translation_app/`):
 
-    ```bash
-    python main.py
+```bash
+python main.py
+```
 
 Open your browser and navigate to the local URL shown in your terminal (usually `http://127.0.0.1:7860`).
 
