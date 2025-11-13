@@ -324,7 +324,7 @@ def create_app():
                             value="base",
                             choices=["tiny", "base", "small", "medium", "large"],
                         )
-                        gr.Markdown("Smaller = faster but less efficient<br>Bigger = slower but better quality transcription",)
+                        gr.Markdown("Smaller = faster but less efficient<br>Bigger = slower but better transcription quality",)
                     with gr.Column(scale=1):
                         gr.Markdown("OCR Model (Fixed: gemma3:12b)")
 
