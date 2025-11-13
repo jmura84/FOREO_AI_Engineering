@@ -253,10 +253,10 @@ def create_app():
                 label="Ollama Model",
                 value="gemma3:4b-it-qat",
                 # Added gemma3:12b to the list
-                choices=["gemma2:9b", "gemma3:12b", "gemma3:4b", "gemma3:4b-it-qat", "thinkverse/towerinstruct:latest"]
+                choices=["gemma2:9b", "gemma3:4b", "gemma3:4b-it-qat", "gemma3:12b", "thinkverse/towerinstruct:latest"]
             )
             temp = gr.Slider(
-                label="Temperature",
+                label="Temperature (0 = More literal, 1 = More creative)",
                 minimum=0.0,
                 maximum=1.0,
                 step=0.1,
@@ -320,10 +320,11 @@ def create_app():
                 with gr.Row():
                     with gr.Column(scale=1):
                         whisper_model_dd = gr.Dropdown(
-                            label="Whisper Model",  # Simplified label
+                            label="Whisper Model (Audio/Video Transcriptor)",  # Simplified label
                             value="base",
                             choices=["tiny", "base", "small", "medium", "large"],
                         )
+                        gr.Markdown("Smaller = faster & less efficient<br>Bigger = slower but better quality transcription",)
                     with gr.Column(scale=1):
                         gr.Markdown("OCR Model (Fixed: gemma3:12b)")
 
