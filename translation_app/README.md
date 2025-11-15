@@ -121,5 +121,5 @@ Open your browser and navigate to the local URL shown in your terminal (usually 
 
 * **Save Corrections (Improve the TM):**
     1.  After a translation, edit the text in the "Translated Text" box.
-    2.  A red "Save Modification" button will appear.
+    2.  A "Save Modification" button will appear.
     3.  Click it. Your correction is now saved to `data/user_mods_tm.csv` and will be used automatically the next time you translate that segment.
