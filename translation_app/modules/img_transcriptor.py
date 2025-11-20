@@ -60,12 +60,14 @@ def image_ocr_llm_langchain(model_name: str, input_img_path: str, source_lang: s
     print(f"Image transcriber (LangChain): Transcribing the image in {source_lang} language with {model_name}...")
 
     # 1. Initialize the Chat Model
+    # https://docs.unsloth.ai/new/deepseek-ocr-how-to-run-and-fine-tune
+    # https://ollama.com/library/deepseek-ocr:3b
     chat_model = ChatOllama(
         model=model_name,
-        temperature=0.1,
+        temperature=0.0, # DeepSeek
         top_p = 0.9,
         top_k = 50,
-        num_predict = 2048
+        num_predict = 8192 # DeepSeek
     )
 
     # 2. Encode the image to base64 (LangChain lo necesita así)
@@ -80,11 +82,13 @@ def image_ocr_llm_langchain(model_name: str, input_img_path: str, source_lang: s
             content=[
                 {
                     "type": "text",
-                    "text": f'Extract all text from this image. The language is {source_lang}. DO NOT add any content or explanation from your side.'
+                    "text": "<image>\nFree OCR.", # Prompt for DeepSeek
                 },
+                # "type": "text",
+                #                     "text": f'Extract all text from this image. The language is {source_lang}. DO NOT add any content or explanation from your side.'
                 {
                     "type": "image_url",
-                    # Formateamos el data URL que LangChain espera
+                    # We format the data URL that LangChain wants:
                     "image_url": f"data:{mime_type};base64,{image_base64}"
                 }
             ]

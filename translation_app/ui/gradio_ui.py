@@ -206,8 +206,9 @@ def handle_image_transcription_complete(file_temp_obj, source_lang):
     print(f"Starting image transcription for: {file_temp_obj.name}")
 
     # --- Hardcode the model name as requested ---
-    model_name = "gemma3:12b"
-    # model_name = "deepseek-ocr:3b"
+    # https://docs.unsloth.ai/new/deepseek-ocr-how-to-run-and-fine-tune
+    # model_name = "gemma3:12b"
+    model_name = "deepseek-ocr:3b"
 
     # Call the img_transcriptor module function
     transcription = image_ocr_llm_langchain(
@@ -254,7 +255,7 @@ def create_app():
                 label="Ollama Model",
                 value="gemma3:4b-it-qat",
                 # Added gemma3:12b to the list
-                choices=["gemma2:9b", "gemma3:4b", "gemma3:4b-it-qat", "gemma3:12b", "thinkverse/towerinstruct:latest"]
+                choices=["gemma2:9b", "gemma3:4b", "gemma3:4b-it-qat", "gemma3:12b", "gemma3:12b-it-qat", "thinkverse/towerinstruct:latest"]
             )
             temp = gr.Slider(
                 label="Temperature (0 = More literal, 1 = More creative)",
@@ -326,8 +327,8 @@ def create_app():
                             choices=["tiny", "base", "small", "medium", "large"],
                         )
                         gr.Markdown("Smaller = faster but less efficient<br>Bigger = slower but better transcription quality",)
-                    # with gr.Column(scale=1):
-                        # gr.Markdown("OCR Model (Fixed: gemma3:12b)")
+                    with gr.Column(scale=1):
+                        gr.Markdown("OCR Model (Fixed: DeepSeek OCR 3b)")
 
                 # This status label is now shared by both buttons
                 transcription_status = gr.Label(visible=False, show_label=False)
