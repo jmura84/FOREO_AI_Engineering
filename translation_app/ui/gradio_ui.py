@@ -207,6 +207,7 @@ def handle_image_transcription_complete(file_temp_obj, source_lang):
 
     # --- Hardcode the model name as requested ---
     model_name = "gemma3:12b"
+    # model_name = "deepseek-ocr:3b"
 
     # Call the img_transcriptor module function
     transcription = image_ocr_llm_langchain(
@@ -325,8 +326,8 @@ def create_app():
                             choices=["tiny", "base", "small", "medium", "large"],
                         )
                         gr.Markdown("Smaller = faster but less efficient<br>Bigger = slower but better transcription quality",)
-                    with gr.Column(scale=1):
-                        gr.Markdown("OCR Model (Fixed: gemma3:12b)")
+                    # with gr.Column(scale=1):
+                        # gr.Markdown("OCR Model (Fixed: gemma3:12b)")
 
                 # This status label is now shared by both buttons
                 transcription_status = gr.Label(visible=False, show_label=False)
