@@ -10,9 +10,9 @@ This project is an advanced, multimodal translation application built with Gradi
 
 * **Sequential Translation Pipeline:** Uses a two-agent architecture for maximum accuracy:
     1.  **Agent 1 (NMT):** The `llm_call.py` module generates a raw translation using a selected Ollama LLM.
-    2.  **Agent 2 (TM Corrector):** The `user_mods_corrector.py` module (a Python-based rules processor) reviews the raw translation against a user-generated CSV, automatically applying corrections.
+    2.  **Script (TM Corrector):** The `user_mods_corrector.py` module (a Python-based rules processor) reviews the raw translation against a user-generated CSV, and if the segment matches 100% it automatically applies the correction.
 
-* **Evolving Translation Memory (TM):** The app learns! Any manual corrections saved via the UI are stored in `data/user_mods_tm.csv`. This "memory" is used by Agent 2 in all future translations to prevent repeated errors.
+* **Evolving Translation Memory (TM):** Any manual corrections saved via the UI are stored in `data/user_mods_tm.csv`. This "memory" is used by the script in all future translations to prevent repeated errors.
 
 * **Audio/Video Transcription:** Utilizes `openai-whisper` (via `audio2text.py`) to transcribe audio or video files (`.mp3`, `.wav`, `.mp4`) into `.SRT` formatted text, which is then populated in the source text box.
 
@@ -55,7 +55,7 @@ This application is **entirely dependent on Ollama** to function.
 
 1.  **Install Ollama:** Download and install the Ollama desktop application from [ollama.com](https://ollama.com/).
 
-2.  **Run Ollama:** Ensure the Ollama application is running in the background.
+2.  **Run Ollama:** Always ensure the Ollama application is running in the background.
 
 3.  **Pull Required Models:** This application requires several models to be downloaded before use. Open your terminal and run `ollama pull` for each model listed below. **The app will fail if the models are not pulled first.**
 
@@ -104,7 +104,7 @@ Open your browser and navigate to the local URL shown in your terminal (usually 
 
 * **Text Translation:**
     1.  Type your text into the "Source Text" box.
-    2.  Select the "Source Language" and "Target Language".
+    2.  Always select the correct "Source Language" and "Target Language".
     3.  Choose the "Ollama Model" you wish to use.
     4.  Click "Translate ➡️".
 
