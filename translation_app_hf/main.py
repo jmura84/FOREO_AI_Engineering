@@ -7,7 +7,7 @@ from contextlib import asynccontextmanager
 # Add the current directory to path so we can import modules
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from ui.interface import create_gradio_interface
+from ui.interface import create_gradio_interface, THEME, CUSTOM_CSS
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -24,8 +24,8 @@ io = create_gradio_interface()
 
 # Mount Gradio app
 # path="/" means the Gradio app will be at the root URL
-app = gr.mount_gradio_app(app, io, path="/")
+app = gr.mount_gradio_app(app, io, path="/", theme=THEME, css=CUSTOM_CSS)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8000)

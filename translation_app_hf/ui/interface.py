@@ -105,13 +105,14 @@ def update_target_languages(source_lang):
 def show_save_button():
     return gr.Button(visible=True), gr.Label(visible=False)
 
-def create_gradio_interface():
-    custom_css = """
-    #translate_button { background: #4CAF50 !important; color: white !important; }
-    #translate_button:hover { background: #45a049 !important; }
-    """
+THEME = gr.themes.Soft()
+CUSTOM_CSS = """
+#translate_button { background: #4CAF50 !important; color: white !important; }
+#translate_button:hover { background: #45a049 !important; }
+"""
 
-    with gr.Blocks(theme=gr.themes.Soft(), css=custom_css) as demo:
+def create_gradio_interface():
+    with gr.Blocks() as demo:
         gr.Markdown("# 🤖 FOREO HF Translator")
         gr.Markdown("Powered by Hugging Face Transformers & FastAPI")
 
