@@ -9,4 +9,13 @@ for %%P in (8000 8001 8002) do (
         taskkill /F /PID %%A >nul 2>&1
     )
 )
+
+rem -------------------------------------------------
+rem OPTIONAL: Kill all running python.exe processes
+rem -------------------------------------------------
+echo.
+echo Killing any stray python.exe processes...
+rem The /F flag forces termination; /IM matches the image name.
+taskkill /F /IM python.exe >nul 2>&1
+
 echo All done.

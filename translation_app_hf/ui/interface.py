@@ -57,26 +57,7 @@ def translate_wrapper(text, model_name, temperature, source_lang, target_lang):
         )
         return final_translation
 
-    try:
-        for elapsed in run_with_timer(_translate_task, ()):
-            if isinstance(elapsed, float):
-                yield "", "", gr.Button(visible=False), gr.Label(value=f"Translating... {elapsed:.1f}s", visible=True)
-            else:
-                # This part is technically unreachable with current run_with_timer logic but good for safety
-                pass
-        
-        # When generator finishes, run_with_timer returns the result, but we need to catch it
-        # Actually run_with_timer is a generator that yields elapsed time, and returns result at the end?
-        # No, generators in Python 3.3+ can return a value, but iterating over them doesn't give the return value easily.
-        # Let's adjust run_with_timer to yield the result as the last item wrapped in a tuple or similar.
-        pass
-    except Exception as e:
-        yield "", "", gr.Button(visible=False), gr.Label(value=f"Error: {e}", visible=True)
-        return
-
-    # Let's redefine run_with_timer slightly to be easier to use in a loop
-    # Or just inline the logic here for simplicity and robustness
-    
+    # Start task in thread
     result_container = {}
     def target():
         try:
@@ -92,7 +73,7 @@ def translate_wrapper(text, model_name, temperature, source_lang, target_lang):
         elapsed = time.time() - start_time
         yield "", "", gr.Button(visible=False), gr.Label(value=f"Translating... {elapsed:.1f}s", visible=True)
         t.join(timeout=0.1)
-    
+        
     if 'error' in result_container:
         yield "", "", gr.Button(visible=False), gr.Label(value=f"Error: {result_container['error']}", visible=True)
     else:
@@ -233,9 +214,8 @@ def create_gradio_interface():
                 choices=[
                     "google/gemma-2-2b-it", 
                     "microsoft/Phi-3-mini-4k-instruct",
-                    "google/gemma-3-4b-it",
-                    "google/gemma-3-12b-it",
                     "google/gemma-2-9b-it"
+                    # Note: Gemma-3 models removed due to CUDA compatibility issues with PyTorch 2.6.0+cu124
                 ]
             )
             temp = gr.Slider(label="Temperature", minimum=0.0, maximum=1.0, step=0.1, value=0.3)
@@ -243,7 +223,7 @@ def create_gradio_interface():
         gr.Markdown("## Text Translation")
         with gr.Row():
             source_lang_dd = gr.Dropdown(label="Source Language", choices=LANGUAGES, value="English")
-            target_lang_dd = gr.Dropdown(label="Target Language", choices=["Spanish", "Polish", "Turkish"], value="Spanish")
+            target_lang_dd = gr.Dropdown(label="Target Language", choices=["English", "Spanish", "Polish", "Turkish"], value="Spanish")
 
         with gr.Row(equal_height=True):
             with gr.Column(scale=5):
@@ -256,7 +236,7 @@ def create_gradio_interface():
         with gr.Row():
             with gr.Column(scale=5):
                 with gr.Row():
-                    transcribe_button = gr.UploadButton("Transcribe Audio/Video 🎵", file_types=["audio", "video"], type="filepath")
+                    transcribe_button = gr.UploadButton("Transcribe Audio/Video (SRT) 🎵", file_types=["audio", "video"], type="filepath")
                     transcribe_image_button = gr.UploadButton("Transcribe Image (OCR) 🖼️", file_types=["image"], type="filepath")
                 
                 with gr.Row():

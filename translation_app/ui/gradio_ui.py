@@ -309,7 +309,7 @@ def create_app():
                 with gr.Row():
                     with gr.Column(scale=1):
                         transcribe_button = gr.UploadButton(
-                            "Transcribe Audio/Video 🎵",
+                            "Transcribe Audio/Video (SRT) 🎵",
                             file_types=["audio", "video"],
                         )
                     with gr.Column(scale=1):
