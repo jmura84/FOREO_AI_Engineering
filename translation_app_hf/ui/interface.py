@@ -15,22 +15,90 @@ CSV_FILE_PATH = os.path.join(DATA_DIR, 'user_mods_tm.csv')
 
 LANGUAGES = ["English", "Spanish", "Polish", "Turkish"]
 
+import time
+import threading
+
+def run_with_timer(func, args, update_interval=0.1):
+    result_container = {}
+    def target():
+        try:
+            result_container['result'] = func(*args)
+        except Exception as e:
+            result_container['error'] = e
+
+    t = threading.Thread(target=target)
+    t.start()
+    
+    start_time = time.time()
+    while t.is_alive():
+        elapsed = time.time() - start_time
+        yield elapsed
+        t.join(timeout=update_interval)
+    
+    if 'error' in result_container:
+        raise result_container['error']
+    return result_container['result']
+
 def translate_wrapper(text, model_name, temperature, source_lang, target_lang):
     if not text:
-        return "", "", gr.Button(visible=False), gr.Label(visible=False)
+        yield "", "", gr.Button(visible=False), gr.Label(visible=False)
+        return
 
     print(f"Translating with {model_name}...")
     
-    # Get engine and translate
-    engine = get_llm_engine(model_name)
-    raw_translation = engine.translate(text, source_lang, target_lang, temperature)
+    def _translate_task():
+        # Get engine and translate
+        engine = get_llm_engine(model_name)
+        raw_translation = engine.translate(text, source_lang, target_lang, temperature)
 
-    # Apply corrections
-    final_translation = review_and_correct(
-        raw_translation, text, CSV_FILE_PATH, source_lang, target_lang
-    )
+        # Apply corrections
+        final_translation = review_and_correct(
+            raw_translation, text, CSV_FILE_PATH, source_lang, target_lang
+        )
+        return final_translation
 
-    return final_translation, final_translation, gr.Button(visible=False), gr.Label(visible=False)
+    try:
+        for elapsed in run_with_timer(_translate_task, ()):
+            if isinstance(elapsed, float):
+                yield "", "", gr.Button(visible=False), gr.Label(value=f"Translating... {elapsed:.1f}s", visible=True)
+            else:
+                # This part is technically unreachable with current run_with_timer logic but good for safety
+                pass
+        
+        # When generator finishes, run_with_timer returns the result, but we need to catch it
+        # Actually run_with_timer is a generator that yields elapsed time, and returns result at the end?
+        # No, generators in Python 3.3+ can return a value, but iterating over them doesn't give the return value easily.
+        # Let's adjust run_with_timer to yield the result as the last item wrapped in a tuple or similar.
+        pass
+    except Exception as e:
+        yield "", "", gr.Button(visible=False), gr.Label(value=f"Error: {e}", visible=True)
+        return
+
+    # Let's redefine run_with_timer slightly to be easier to use in a loop
+    # Or just inline the logic here for simplicity and robustness
+    
+    result_container = {}
+    def target():
+        try:
+            result_container['result'] = _translate_task()
+        except Exception as e:
+            result_container['error'] = e
+
+    t = threading.Thread(target=target)
+    t.start()
+    
+    start_time = time.time()
+    while t.is_alive():
+        elapsed = time.time() - start_time
+        yield "", "", gr.Button(visible=False), gr.Label(value=f"Translating... {elapsed:.1f}s", visible=True)
+        t.join(timeout=0.1)
+    
+    if 'error' in result_container:
+        yield "", "", gr.Button(visible=False), gr.Label(value=f"Error: {result_container['error']}", visible=True)
+    else:
+        final_translation = result_container['result']
+        elapsed = time.time() - start_time
+        yield final_translation, final_translation, gr.Button(visible=False), gr.Label(value=f"Translation complete in {elapsed:.1f}s", visible=True)
 
 def save_modification(source_text, modified_target_text, original_translation, source_lang, target_lang):
     language_pair = f"{source_lang} -> {target_lang}"
@@ -78,23 +146,63 @@ def save_modification(source_text, modified_target_text, original_translation, s
     except Exception as e:
         return gr.Label(value=f"Error: {e}", visible=True), gr.Button(visible=True)
 
-def transcribe_audio(file_obj, model_name):
-    if file_obj is None:
-        return None, gr.Label(value="No file uploaded.", visible=True)
+def transcribe_audio(file_path, model_name):
+    if file_path is None:
+        yield gr.update(), gr.Label(value="No file uploaded.", visible=True)
+        return
     
-    engine = get_audio_engine(model_name)
-    srt = engine.transcribe(file_obj.name)
-    return srt, gr.Label(value="Audio transcription successful!", visible=True)
+    result_container = {}
+    def target():
+        try:
+            engine = get_audio_engine(model_name)
+            result_container['result'] = engine.transcribe(file_path)
+        except Exception as e:
+            result_container['error'] = e
 
-def transcribe_image(file_obj, source_lang):
-    if file_obj is None:
-        return None, gr.Label(value="No image uploaded.", visible=True)
+    t = threading.Thread(target=target)
+    t.start()
     
-    # Hardcoded model for now as per previous app logic, but using our new engine
-    model_name = "Qwen/Qwen2-VL-2B-Instruct" 
-    engine = get_vision_engine(model_name)
-    text = engine.transcribe_image(file_obj.name, source_lang)
-    return text, gr.Label(value="Image transcription successful!", visible=True)
+    start_time = time.time()
+    while t.is_alive():
+        elapsed = time.time() - start_time
+        yield gr.update(), gr.Label(value=f"Transcribing... {elapsed:.1f}s", visible=True)
+        t.join(timeout=0.1)
+        
+    if 'error' in result_container:
+        yield gr.update(), gr.Label(value=f"Error: {result_container['error']}", visible=True)
+    else:
+        elapsed = time.time() - start_time
+        yield result_container['result'], gr.Label(value=f"Audio transcription successful! ({elapsed:.1f}s)", visible=True)
+
+def transcribe_image(file_path, source_lang):
+    if file_path is None:
+        yield gr.update(), gr.Label(value="No image uploaded.", visible=True)
+        return
+    
+    result_container = {}
+    def target():
+        try:
+            # Hardcoded model for now as per previous app logic, but using our new engine
+            model_name = "Qwen/Qwen2-VL-2B-Instruct" 
+            engine = get_vision_engine(model_name)
+            result_container['result'] = engine.transcribe_image(file_path, source_lang)
+        except Exception as e:
+            result_container['error'] = e
+
+    t = threading.Thread(target=target)
+    t.start()
+    
+    start_time = time.time()
+    while t.is_alive():
+        elapsed = time.time() - start_time
+        yield gr.update(), gr.Label(value=f"Transcribing Image... {elapsed:.1f}s", visible=True)
+        t.join(timeout=0.1)
+        
+    if 'error' in result_container:
+        yield gr.update(), gr.Label(value=f"Error: {result_container['error']}", visible=True)
+    else:
+        elapsed = time.time() - start_time
+        yield result_container['result'], gr.Label(value=f"Image transcription successful! ({elapsed:.1f}s)", visible=True)
 
 def update_target_languages(source_lang):
     if source_lang == "English":
@@ -122,7 +230,13 @@ def create_gradio_interface():
             model_name = gr.Dropdown(
                 label="Text Model",
                 value="google/gemma-2-2b-it",
-                choices=["google/gemma-2-2b-it", "microsoft/Phi-3-mini-4k-instruct"]
+                choices=[
+                    "google/gemma-2-2b-it", 
+                    "microsoft/Phi-3-mini-4k-instruct",
+                    "google/gemma-3-4b-it",
+                    "google/gemma-3-12b-it",
+                    "google/gemma-2-9b-it"
+                ]
             )
             temp = gr.Slider(label="Temperature", minimum=0.0, maximum=1.0, step=0.1, value=0.3)
 
@@ -142,12 +256,12 @@ def create_gradio_interface():
         with gr.Row():
             with gr.Column(scale=5):
                 with gr.Row():
-                    transcribe_button = gr.UploadButton("Transcribe Audio/Video 🎵", file_types=["audio", "video"])
-                    transcribe_image_button = gr.UploadButton("Transcribe Image (OCR) 🖼️", file_types=["image"])
+                    transcribe_button = gr.UploadButton("Transcribe Audio/Video 🎵", file_types=["audio", "video"], type="filepath")
+                    transcribe_image_button = gr.UploadButton("Transcribe Image (OCR) 🖼️", file_types=["image"], type="filepath")
                 
                 with gr.Row():
-                    whisper_model_dd = gr.Dropdown(label="Whisper Model", value="base", choices=["tiny", "base", "small"])
-                    gr.Markdown("OCR Model: Qwen2-VL-2B-Instruct")
+                    whisper_model_dd = gr.Dropdown(label="Whisper Model", value="base", choices=["tiny", "base", "small", "medium", "large"])
+                    gr.Markdown("### OCR Model: Qwen/Qwen2-VL-2B-Instruct")
                 
                 transcription_status = gr.Label(visible=False, show_label=False)
 
@@ -175,10 +289,16 @@ def create_gradio_interface():
             outputs=[feedback_label, save_button]
         )
 
-        transcribe_button.upload(lambda: gr.Label(value="Transcribing...", visible=True), outputs=transcription_status) \
-            .then(transcribe_audio, inputs=[transcribe_button, whisper_model_dd], outputs=[source_text, transcription_status])
+        transcribe_button.upload(
+            transcribe_audio,
+            inputs=[transcribe_button, whisper_model_dd],
+            outputs=[source_text, transcription_status]
+        )
 
-        transcribe_image_button.upload(lambda: gr.Label(value="Transcribing Image...", visible=True), outputs=transcription_status) \
-            .then(transcribe_image, inputs=[transcribe_image_button, source_lang_dd], outputs=[source_text, transcription_status])
+        transcribe_image_button.upload(
+            transcribe_image,
+            inputs=[transcribe_image_button, source_lang_dd],
+            outputs=[source_text, transcription_status]
+        )
 
     return demo

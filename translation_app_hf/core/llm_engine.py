@@ -1,6 +1,7 @@
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 import logging
+import re
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -38,11 +39,22 @@ class LLMEngine:
         if self.model is None:
             self.load_model()
 
-        system_prompt = (
-            f"You are a professional translator. "
-            f"Translate the following text from {source_lang} to {target_lang}. "
-            f"Return ONLY the translated text. Do not add any explanations."
-        )
+        # Check for SRT format
+        is_srt = bool(re.search(r'^\d+\s+\d{2}:\d{2}:\d{2},\d{3}\s-->\s\d{2}:\d{2}:\d{2},\d{3}', text.strip(), re.MULTILINE))
+
+        if is_srt:
+            system_prompt = (
+                f"You are a professional translator. "
+                f"Translate the following SRT subtitles from {source_lang} to {target_lang}. "
+                f"Preserve the SRT format (sequence numbers and timestamps) EXACTLY. "
+                f"Translate ONLY the subtitle text. Do not add any explanations."
+            )
+        else:
+            system_prompt = (
+                f"You are a professional translator. "
+                f"Translate the following text from {source_lang} to {target_lang}. "
+                f"Return ONLY the translated text. Do not add any explanations."
+            )
 
         messages = [
             {"role": "user", "content": f"{system_prompt}\n\nText to translate:\n{text}"}

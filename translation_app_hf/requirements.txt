@@ -10,3 +10,9 @@ openai-whisper
 pillow
 pandas
 python-multipart
+torchvision
+addict
+matplotlib
+einops
+easydict
+qwen-vl-utils

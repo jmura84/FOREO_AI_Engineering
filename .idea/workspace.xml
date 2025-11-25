@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="" />
+    <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app_hf/core/llm_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/core/llm_engine.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app_hf/core/vision_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/core/vision_engine.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app_hf/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app_hf/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app_hf/ui/interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/ui/interface.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

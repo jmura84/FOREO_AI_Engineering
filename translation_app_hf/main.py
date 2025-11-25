@@ -28,4 +28,9 @@ app = gr.mount_gradio_app(app, io, path="/", theme=THEME, css=CUSTOM_CSS)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    try:
+        uvicorn.run(app, host="127.0.0.1", port=8002)
+    except KeyboardInterrupt:
+        print("Server stopped by user (KeyboardInterrupt). Exiting gracefully.")
+        # Graceful shutdown handled by FastAPI lifespan
+        sys.exit(0)
