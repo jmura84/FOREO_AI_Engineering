@@ -8,3 +8,9 @@ pillow
 sentencepiece
 protobuf
 scipy
+qwen-vl-utils
+torchvision
+decord
+openai-whisper
+fastapi
+uvicorn
