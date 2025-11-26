@@ -14,3 +14,6 @@ decord
 openai-whisper
 fastapi
 uvicorn
+google-generativeai
+python-dotenv
+bitsandbytes

@@ -6,6 +6,8 @@ from core.llm_engine import get_llm_engine
 from core.vision_engine import get_vision_engine
 from core.audio_engine import get_audio_engine
 from core.corrector import review_and_correct
+import time
+import threading
 
 # Define paths
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -14,9 +16,6 @@ DATA_DIR = os.path.join(ROOT_DIR, 'data')
 CSV_FILE_PATH = os.path.join(DATA_DIR, 'user_mods_tm.csv')
 
 LANGUAGES = ["English", "Spanish", "Polish", "Turkish"]
-
-import time
-import threading
 
 def run_with_timer(func, args, update_interval=0.1):
     result_container = {}
@@ -185,11 +184,19 @@ def transcribe_image(file_path, source_lang):
         elapsed = time.time() - start_time
         yield result_container['result'], gr.Label(value=f"Image transcription successful! ({elapsed:.1f}s)", visible=True)
 
-def update_target_languages(source_lang):
-    if source_lang == "English":
-        return gr.Dropdown(choices=[l for l in LANGUAGES if l != "English"], value="Spanish", interactive=True)
+def update_other_dropdown(selected_val, other_val):
+    if selected_val != "English":
+        # If selected is NOT English, the other MUST be English and Locked
+        return gr.Dropdown(value="English", choices=["English"], interactive=False)
     else:
-        return gr.Dropdown(choices=["English"], value="English", interactive=False)
+        # If selected IS English, the other can be any language (including English) and Unlocked
+        # But we default to Spanish if the previous value was English to avoid English->English
+        new_val = other_val
+        if new_val == "English":
+             new_val = "Spanish"
+             
+        # Choices include ALL languages so user can switch back to English to flip the lock
+        return gr.Dropdown(value=new_val, choices=LANGUAGES, interactive=True)
 
 def show_save_button():
     return gr.Button(visible=True), gr.Label(visible=False)
@@ -210,12 +217,14 @@ def create_gradio_interface():
         with gr.Row():
             model_name = gr.Dropdown(
                 label="Text Model",
-                value="google/gemma-2-2b-it",
+                value="gemini-2.5-flash",
                 choices=[
+                    "gemini-2.5-flash",
+                    "gemini-2.5-pro",
+                    "gemini-2.5-flash-lite",
                     "google/gemma-2-2b-it", 
                     "microsoft/Phi-3-mini-4k-instruct",
                     "google/gemma-2-9b-it"
-                    # Note: Gemma-3 models removed due to CUDA compatibility issues with PyTorch 2.6.0+cu124
                 ]
             )
             temp = gr.Slider(label="Temperature", minimum=0.0, maximum=1.0, step=0.1, value=0.3)
@@ -253,7 +262,18 @@ def create_gradio_interface():
                     save_button = gr.Button("Save Modification", variant="stop", visible=False, scale=1)
 
         # Event Wiring
-        source_lang_dd.change(update_target_languages, inputs=source_lang_dd, outputs=target_lang_dd)
+        # Bidirectional updates: changing one updates the choices of the other
+        source_lang_dd.change(
+            update_other_dropdown, 
+            inputs=[source_lang_dd, target_lang_dd], 
+            outputs=target_lang_dd
+        )
+        
+        target_lang_dd.change(
+            update_other_dropdown, 
+            inputs=[target_lang_dd, source_lang_dd], 
+            outputs=source_lang_dd
+        )
         
         translate_button.click(
             translate_wrapper,

@@ -3,6 +3,10 @@ import sys
 from fastapi import FastAPI
 import gradio as gr
 from contextlib import asynccontextmanager
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Add the current directory to path so we can import modules
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))

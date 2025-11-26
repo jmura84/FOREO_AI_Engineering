@@ -2,6 +2,9 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 import logging
 import re
+import os
+import google.generativeai as genai
+import time
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -18,13 +21,20 @@ class LLMEngine:
         logger.info(f"LLMEngine initialized on {self.device} with model {self.model_name}")
 
     def load_model(self, use_quantization=True):
-        """Load model with GPU acceleration and optional quantization.
-        
-        Args:
-            use_quantization: Enable 4-bit quantization for faster inference (default: True)
-                             NOTE: Works well with Gemma-2; Gemma-3 has CUDA compatibility issues
-        """
+        """Load model with GPU acceleration and optional quantization."""
         if self.model is not None:
+            return
+
+        # Google Gemini API Support
+        if "gemini" in self.model_name:
+            api_key = os.getenv("GOOGLE_API_KEY")
+            if not api_key:
+                logger.error("GOOGLE_API_KEY not found in environment variables")
+                raise ValueError("GOOGLE_API_KEY is required for Gemini models")
+            
+            genai.configure(api_key=api_key)
+            self.model = genai.GenerativeModel(self.model_name)
+            logger.info(f"✓ Google Gemini model {self.model_name} configured")
             return
 
         logger.info(f"Loading model {self.model_name} on {self.device}...")
@@ -101,6 +111,70 @@ class LLMEngine:
         # Import SRT parser
         from core.srt_parser import SRTParser
         
+        # --- STRATEGY 1: Google Gemini API (Full Text) ---
+        if "gemini" in self.model_name:
+            is_srt = SRTParser.is_srt_format(text)
+            logger.info(f"Translating full text with {self.model_name} (API) - SRT: {is_srt}")
+            
+            system_prompt = (
+                f"You are a professional translator. "
+                f"Translate the following text from {source_lang} to {target_lang}. "
+                f"If the target language is Spanish, use Spanish from Spain dialect. "
+                "The texts you translate are from a beauty products brand called FOREO. "
+            )
+            
+            if is_srt:
+                system_prompt += (
+                    "The input is a SubRip Subtitle (SRT) file. "
+                    "You MUST preserve the exact structure: segment numbers and timestamps must remain unchanged. "
+                    "Translate ONLY the subtitle text content. "
+                    "Do not merge or split segments. Keep the exact same number of lines and segments. "
+                    "Return the complete valid SRT file. "
+                    "IMPORTANT: Do NOT wrap the output in markdown code blocks (e.g. ```srt ... ```). "
+                    "Return ONLY the raw SRT content."
+                )
+            else:
+                system_prompt += (
+                    "Translate the exact text provided. Preserve the original formatting, including newlines. "
+                    "Do not add any explanations, questions, or conversational filler. "
+                    "Return ONLY the translated text."
+                )
+            
+            try:
+                # Add retry logic for 429 errors
+                max_retries = 3
+                base_delay = 5
+                
+                for attempt in range(max_retries):
+                    try:
+                        response = self.model.generate_content(
+                            f"{system_prompt}\n\nText to translate:\n{text}"
+                        )
+                        logger.info("✓ Gemini translation successful")
+                        
+                        # Post-processing: Strip markdown code blocks if present
+                        cleaned_text = response.text.strip()
+                        if cleaned_text.startswith("```"):
+                            # Remove first line (```srt or just ```)
+                            cleaned_text = re.sub(r"^```\w*\n", "", cleaned_text)
+                            # Remove last line (```)
+                            cleaned_text = re.sub(r"\n```$", "", cleaned_text)
+                            
+                        return cleaned_text.strip()
+                    except Exception as e:
+                        if "429" in str(e) and attempt < max_retries - 1:
+                            wait_time = base_delay * (2 ** attempt)
+                            logger.warning(f"Rate limit hit. Retrying in {wait_time}s...")
+                            time.sleep(wait_time)
+                            continue
+                        raise e
+                        
+            except Exception as e:
+                logger.error(f"Gemini API error: {e}")
+                return f"[Error: {e}]"
+
+        # --- STRATEGY 2: Local Models (Segment-by-Segment / Line-by-Line) ---
+        
         # Check if input is SRT format
         if SRTParser.is_srt_format(text):
             logger.info("✓ SRT format detected - translating segment by segment...")
@@ -110,7 +184,6 @@ class LLMEngine:
             translated_segments = []
             
             # Translate segment by segment to guarantee format preservation
-            # This is slower but much more reliable for format correctness
             for i, (seg_num, timestamp, text_lines) in enumerate(segments):
                 original_text = "\n".join(text_lines)
                 
@@ -132,7 +205,7 @@ class LLMEngine:
                     {"role": "user", "content": f"{system_prompt}\n\nText to translate:\n{original_text}"}
                 ]
                 
-                # Tokenize and generate
+                # Hugging Face Transformers generation
                 input_ids = self.tokenizer.apply_chat_template(
                     messages,
                     return_tensors="pt",
@@ -152,7 +225,7 @@ class LLMEngine:
                 outputs = self.model.generate(
                     input_ids,
                     attention_mask=attention_mask,
-                    max_new_tokens=512,  # Shorter max tokens for single segment
+                    max_new_tokens=512,
                     eos_token_id=terminators,
                     do_sample=True,
                     temperature=temperature,
@@ -211,37 +284,32 @@ class LLMEngine:
                     {"role": "user", "content": f"{system_prompt}\n\nText to translate:\n{line}"}
                 ]
 
-                # Apply chat template and prepare inputs with proper padding
+                # Hugging Face Transformers generation
                 input_ids = self.tokenizer.apply_chat_template(
                     messages,
                     return_tensors="pt",
                     add_generation_prompt=True,
-                    padding=False,  # Don't pad the input
+                    padding=False,
                     truncation=False
                 )
                 
-                # Move to device and create attention mask
                 input_ids = input_ids.to(self.model.device)
                 attention_mask = torch.ones_like(input_ids, device=self.model.device)
 
-                # Build terminator list, filtering out invalid IDs (prevents CUDA assert errors)
                 terminators = [self.tokenizer.eos_token_id]
-                
-                # Try to add custom terminators if they exist in vocabulary
                 end_of_turn_id = self.tokenizer.convert_tokens_to_ids("<end_of_turn>")
                 if end_of_turn_id != self.tokenizer.unk_token_id and end_of_turn_id >= 0:
                     terminators.append(end_of_turn_id)
 
-                # Generate with explicit attention mask to prevent CUDA errors
                 outputs = self.model.generate(
                     input_ids,
-                    attention_mask=attention_mask,  # Explicitly pass attention mask
+                    attention_mask=attention_mask,
                     max_new_tokens=2048,
                     eos_token_id=terminators,
                     do_sample=True,
                     temperature=temperature,
                     top_p=0.9,
-                    pad_token_id=self.tokenizer.pad_token_id  # Explicitly set pad token
+                    pad_token_id=self.tokenizer.pad_token_id
                 )
 
                 response = outputs[0][input_ids.shape[-1]:]
@@ -255,8 +323,7 @@ class LLMEngine:
             logger.info("✓ All segments successfully translated")
             return "\n".join(translated_lines)
 
-# Singleton instance for easy access, though in a real app we might want dependency injection
-# We'll initialize it lazily
+# Singleton instance
 _engine = None
 
 def get_llm_engine(model_name="google/gemma-2-2b-it"):
