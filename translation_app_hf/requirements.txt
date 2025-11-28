@@ -17,3 +17,5 @@ python-dotenv
 bitsandbytes
 fastapi
 uvicorn
+python-dotenv
+bitsandbytes

@@ -187,7 +187,6 @@ def transcribe_image(file_path, source_lang, ocr_model_label):
         yield gr.update(), gr.Label(value="No image uploaded.", visible=True)
         return
 
-    # Detect selected OCR model
     if "gemini" in ocr_model_label.lower():
         selected_model = "gemini"
     else:
@@ -198,13 +197,11 @@ def transcribe_image(file_path, source_lang, ocr_model_label):
     def target():
         try:
             if selected_model == "qwen":
-                # Local Qwen OCR
                 engine = get_vision_engine("Qwen/Qwen2-VL-2B-Instruct")
                 engine.load_model()
                 result_container['result'] = engine.transcribe_image(file_path, source_lang)
 
             else:
-                # Gemini OCR (via Google API)
                 import google.generativeai as genai
                 api_key = os.getenv("GOOGLE_API_KEY")
                 if not api_key:
@@ -241,7 +238,6 @@ def transcribe_image(file_path, source_lang, ocr_model_label):
         except Exception as e:
             result_container['error'] = e
 
-    # Threading wrapper
     t = threading.Thread(target=target)
     t.start()
     start_time = time.time()
@@ -276,7 +272,10 @@ def show_save_button():
 # Gradio Interface
 # -----------------------------
 def create_gradio_interface():
-    with gr.Blocks() as demo:
+
+    # 🔥 CHANGE IS HERE — CSS IS NOW APPLIED
+    with gr.Blocks(css=CUSTOM_CSS) as demo:
+
         gr.Markdown("# 🤖 FOREO HF Translator")
         gr.Markdown("Powered by Hugging Face, Google, OpenAI & Qwen/Vision Models")
 

@@ -5,8 +5,8 @@ import gradio as gr
 # Add current directory to Python path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-# Import the corrected interface (no THEME)
-from ui.interface import create_gradio_interface, CUSTOM_CSS
+# Import the corrected interface (CSS is handled INSIDE the interface)
+from ui.interface import create_gradio_interface
 
 # -----------------------------
 # Manual lifecycle hooks (simulate FastAPI lifespan)
@@ -31,13 +31,12 @@ if __name__ == "__main__":
 
         # Local run
         io.launch(
-            server_name="127.0.0.1",  # Localhost
+            server_name="127.0.0.1",
             server_port=8000,
-            css=CUSTOM_CSS
         )
 
         # For HuggingFace Spaces:
-        # io.launch(server_name="0.0.0.0", server_port=7860, css=CUSTOM_CSS)
+        # io.launch(server_name="0.0.0.0", server_port=7860)
 
     except KeyboardInterrupt:
         print("Server stopped by user (KeyboardInterrupt). Exiting gracefully.")

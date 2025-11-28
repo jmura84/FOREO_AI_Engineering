@@ -4,8 +4,13 @@ import logging
 import os
 import google.generativeai as genai
 import re
+from dotenv import load_dotenv
+
+# Load the .env file
+load_dotenv()
 
 logger = logging.getLogger(__name__)
+
 
 class LLMEngine:
     def __init__(self, model_name="gemini-2.5-flash-lite", device=None):
@@ -21,12 +26,13 @@ class LLMEngine:
             return
 
         if self.is_gemini:
-            api_key = os.getenv("GOOGLE_API_KEY")
+            # For HF Spaces api_key = os.getenv("GOOGLE_API_KEY")
+            api_key = os.getenv("GOOGLE_API_KEY")  # Local
             if not api_key:
                 raise ValueError("GOOGLE_API_KEY is required for Gemini models")
-            
+
             genai.configure(api_key=api_key)
-            
+
             generation_config = {
                 "temperature": temperature,
                 "top_p": top_p,
@@ -34,7 +40,7 @@ class LLMEngine:
                 "max_output_tokens": max_output_tokens,
                 "response_mime_type": "text/plain",
             }
-            
+
             self.model = genai.GenerativeModel(
                 model_name=self.model_name,
                 generation_config=generation_config
@@ -48,8 +54,8 @@ class LLMEngine:
             if self.tokenizer.pad_token is None:
                 self.tokenizer.pad_token = self.tokenizer.eos_token
 
-            load_kwargs = {"trust_remote_code": True, "device_map": "auto" if self.device=="cuda" else None}
-            load_kwargs["dtype"] = torch.float16 if self.device=="cuda" else torch.float32
+            load_kwargs = {"trust_remote_code": True, "device_map": "auto" if self.device == "cuda" else None}
+            load_kwargs["dtype"] = torch.float16 if self.device == "cuda" else torch.float32
             self.model = AutoModelForCausalLM.from_pretrained(self.model_name, **load_kwargs)
             logger.info(f"✓ Local HF model loaded on {self.device}")
         except Exception as e:
@@ -87,8 +93,11 @@ class LLMEngine:
         )
         return self.tokenizer.decode(outputs[0], skip_special_tokens=True)
 
+
 # Singleton
 _engine = None
+
+
 def get_llm_engine(model_name="gemini-2.5-flash-lite", temperature=0.3):
     global _engine
     if _engine is None or _engine.model_name != model_name:
