@@ -15,3 +15,5 @@ openai-whisper
 google-generativeai
 python-dotenv
 bitsandbytes
+fastapi
+uvicorn
