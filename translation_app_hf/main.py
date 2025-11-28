@@ -1,40 +1,47 @@
 import os
 import sys
-from fastapi import FastAPI
 import gradio as gr
-from contextlib import asynccontextmanager
-from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
-
-# Add the current directory to path so we can import modules
+# Add current directory to Python path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from ui.interface import create_gradio_interface, THEME, CUSTOM_CSS
+# Import the corrected interface (no THEME)
+from ui.interface import create_gradio_interface, CUSTOM_CSS
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup logic if needed
+# -----------------------------
+# Manual lifecycle hooks (simulate FastAPI lifespan)
+# -----------------------------
+def on_startup():
     print("Starting Translation App HF...")
-    yield
-    # Shutdown logic if needed
+
+def on_shutdown():
     print("Shutting down...")
 
-app = FastAPI(lifespan=lifespan)
-
+# -----------------------------
 # Create Gradio interface
+# -----------------------------
 io = create_gradio_interface()
 
-# Mount Gradio app
-# path="/" means the Gradio app will be at the root URL
-app = gr.mount_gradio_app(app, io, path="/", theme=THEME, css=CUSTOM_CSS)
-
+# -----------------------------
+# Run locally (Gradio)
+# -----------------------------
 if __name__ == "__main__":
-    import uvicorn
     try:
-        uvicorn.run(app, host="127.0.0.1", port=8002)
+        on_startup()
+
+        # Local run
+        io.launch(
+            server_name="127.0.0.1",  # Localhost
+            server_port=8000,
+            css=CUSTOM_CSS
+        )
+
+        # For HuggingFace Spaces:
+        # io.launch(server_name="0.0.0.0", server_port=7860, css=CUSTOM_CSS)
+
     except KeyboardInterrupt:
         print("Server stopped by user (KeyboardInterrupt). Exiting gracefully.")
-        # Graceful shutdown handled by FastAPI lifespan
         sys.exit(0)
+
+    finally:
+        on_shutdown()
