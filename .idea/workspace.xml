@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/translation_app_hf/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app_hf/core/llm_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/core/llm_engine.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app_hf/core/vision_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/core/vision_engine.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app_hf/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/main.py" afterDir="false" />
@@ -54,7 +55,7 @@
     "git-widget-placeholder": "dev",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "C:/Python_repositories/foreo-ai-engineering-project/translation_app_hf",
+    "last_opened_file_path": "C:/Python_repositories/foreo-ai-engineering-project/translation_app",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
