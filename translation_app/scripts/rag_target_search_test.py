@@ -29,6 +29,7 @@ test_segments = [
     "Highest discount",
     "Highest price",
     "Lowest price",
+    "My name is Joseph",
     "FAQ™ 202"
 ]
 
