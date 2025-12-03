@@ -274,7 +274,8 @@ def create_app():
             )
             target_lang_dd = gr.Dropdown(
                 label="Target Language",
-                choices=["Spanish", "Polish", "Turkish"],
+                # Antes tenía: choices=["Spanish", "Polish", "Turkish"],
+                choices=LANGUAGES,
                 value="Spanish"
             )
 
