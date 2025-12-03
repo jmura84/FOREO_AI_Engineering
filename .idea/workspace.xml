@@ -5,11 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/translation_app/scripts/rag_llm_test.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/translation_app_hf/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app/rag/47732136-e6d4-4202-a0a0-bcf22d8e660e/data_level0.bin" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/rag/47732136-e6d4-4202-a0a0-bcf22d8e660e/data_level0.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app/rag/47732136-e6d4-4202-a0a0-bcf22d8e660e/length.bin" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/rag/47732136-e6d4-4202-a0a0-bcf22d8e660e/length.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app/rag/chroma.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/rag/chroma.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/translation_app/scripts/rag_translation_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/scripts/rag_target_search_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app_hf/core/llm_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/core/llm_engine.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app_hf/core/vision_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/core/vision_engine.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app_hf/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/main.py" afterDir="false" />
@@ -48,6 +49,7 @@
     "Python.llm_call.executor": "Run",
     "Python.main.executor": "Run",
     "Python.posteditor_agent.executor": "Run",
+    "Python.rag_llm_test.executor": "Run",
     "Python.rag_test.executor": "Run",
     "Python.rag_translation_test.executor": "Run",
     "Python.scraping_etl_biggercorpus.executor": "Run",
