@@ -5,11 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/translation_app/scripts/rag_test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/translation_app/scripts/vector_db_maker.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/translation_app_hf/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/translation_app/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app/rag/chroma.sqlite3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app/rag/f4ea0944-4bad-4f96-94ce-de05adf6529e/data_level0.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app/rag/f4ea0944-4bad-4f96-94ce-de05adf6529e/header.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app/rag/f4ea0944-4bad-4f96-94ce-de05adf6529e/length.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app/rag/f4ea0944-4bad-4f96-94ce-de05adf6529e/link_lists.bin" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/scripts/rag_translation_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app/scripts/rag/chroma.sqlite3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app/scripts/rag_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/scripts/rag_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app_hf/core/llm_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/core/llm_engine.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app_hf/core/vision_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/core/vision_engine.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app_hf/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/main.py" afterDir="false" />
@@ -49,6 +53,7 @@
     "Python.main.executor": "Run",
     "Python.posteditor_agent.executor": "Run",
     "Python.rag_test.executor": "Run",
+    "Python.rag_translation_test.executor": "Run",
     "Python.scraping_etl_biggercorpus.executor": "Run",
     "Python.txt_to_csv.executor": "Run",
     "Python.vector_db_maker.executor": "Run",

@@ -1,72 +1,52 @@
-from operator import itemgetter
 from langchain_chroma import Chroma
-from langchain_ollama import OllamaEmbeddings, OllamaLLM
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
+from langchain_ollama import OllamaEmbeddings
 
-
-# 1. Configure embeddings and vector store (assuming the DB already exists)
+# --- Vector DB ---
+# Initialize embeddings using Ollama local model
 embeddings = OllamaEmbeddings(model="nomic-embed-text")
 
+# Connect to existing Chroma vector database
 vector_db = Chroma(
-    persist_directory="./rag",          # Path to your existing vector DB
+    persist_directory="../rag",  # Correct directory
     embedding_function=embeddings,
     collection_name="foreo_translations"
 )
 
-retriever = vector_db.as_retriever(search_kwargs={"k": 1})  # Retrieve the most similar doc
+# --- Function to search for exact translation ---
+def get_translation_exact(source_text):
+    # Perform similarity search in the vector DB
+    results = vector_db.similarity_search(source_text, k=10)
 
+    for doc in results:
+        # Each doc is a Document object; translation is in metadata
+        if "target" in doc.metadata and doc.page_content.strip() == source_text.strip():
+            return doc.metadata["target"]
 
-# 2. Configure LLM
-llm = OllamaLLM(model="gemma3:4b-it-qat")
+    return None
 
+# --- List of segments to test ---
+test_segments = [
+    "Get your FOREO bestseller now",
+    "Life is beautiful. But, with FOREO, it can also be extraordinary. Pamper yourself like never before with best-selling FOREO skincare and oral care devices, and indulge in moments of relaxation, rejuvenation and self-discovery. Over 20 million happy skincare lovers worldwide.",
+    "Featured",
+    "Featured",
+    "Popularity",
+    "Highest discount",
+    "Highest price",
+    "Lowest price",
+    "FAQ™ 202"
+]
 
-# 3. RAG Prompt
-rag_prompt_template = """
-You are an expert translation proofreader.
-Your task is to refine a translation based on a reference example retrieved from a translation memory.
-
-Context (similar example from the database):
-{context}
-
-Source Text: {source_text}
-Translation to Review: {raw_translation}
-
-Instructions:
-- If the context is highly relevant to the source text, use the terminology or style from the context to correct the translation.
-- If the context is not relevant, keep the translation as it is or improve it slightly.
-Return ONLY the final corrected translation.
-"""
-
-prompt = ChatPromptTemplate.from_template(rag_prompt_template)
-
-
-# 4. Build the RAG chain
-def format_docs(docs):
-    return "\n\n".join([d.page_content for d in docs])
-
-
-rag_chain = (
-    {
-        "context": itemgetter("source_text") | retriever | format_docs,
-        "source_text": itemgetter("source_text"),
-        "raw_translation": itemgetter("raw_translation"),
-    }
-    | prompt
-    | llm
-    | StrOutputParser()
-)
-
-
-# 5. Example usage
+# --- Test each segment ---
 if __name__ == "__main__":
-    input_data = {
-        "source_text": "facial cleansing",
-        "raw_translation": "limpieza de cara",  # bad initial translation
-    }
+    for source in test_segments:
+        translation = get_translation_exact(source)
 
-    corrected_text = rag_chain.invoke(input_data)
-
-    print(f"Original: {input_data['source_text']}")
-    print(f"Raw: {input_data['raw_translation']}")
-    print(f"Corrected with RAG: {corrected_text}")
+        if translation:
+            print("Original:", source)
+            print("Translation from DB:", translation)
+            print("---")
+        else:
+            print("Original:", source)
+            print("No matching translation found in the vector DB.")
+            print("---")
