@@ -11,7 +11,7 @@ vector_db = Chroma(
 )
 
 # --- 2. LLM ---
-llm = OllamaLLM(model="gemma3:4b-it-qat")
+llm = OllamaLLM(model="gemma3:4b-it-qat", temperature=0.2)
 
 # --- 3. Segments to test (cleaned, no duplicates) ---
 segments = [
