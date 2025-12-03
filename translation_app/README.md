@@ -36,6 +36,7 @@ translation_app/
 │   ├── llm_call.py             (Agent 1: Raw NMT Translator)
 │   ├── user_mods_corrector.py   (Agent 2: Python-based TM Corrector)
 │── rag/
+│   └── (ChromaDB Vector Store)
 ├── ui/
 │   ├── gradio_ui.py            (All UI logic and orchestration)
 ├── .gitignore

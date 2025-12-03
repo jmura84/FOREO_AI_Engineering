@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/translation_app/scripts/rag_test.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/translation_app/scripts/vector_db_maker.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/translation_app_hf/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/translation_app/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app_hf/core/llm_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/core/llm_engine.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app_hf/core/vision_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/core/vision_engine.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app_hf/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/main.py" afterDir="false" />
@@ -45,8 +48,10 @@
     "Python.llm_call.executor": "Run",
     "Python.main.executor": "Run",
     "Python.posteditor_agent.executor": "Run",
+    "Python.rag_test.executor": "Run",
     "Python.scraping_etl_biggercorpus.executor": "Run",
     "Python.txt_to_csv.executor": "Run",
+    "Python.vector_db_maker.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -68,6 +73,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Python_repositories\foreo-ai-engineering-project\translation_app" />
       <recent name="C:\Python_repositories\foreo-ai-engineering-project\translation_app_hf" />
       <recent name="C:\Python_repositories\foreo-ai-engineering-project\notebooks" />
       <recent name="C:\Python_repositories\foreo-ai-engineering-project\data\aligned csv" />
