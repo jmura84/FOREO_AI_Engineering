@@ -22,13 +22,14 @@ segments = [
     "Highest discount",
     "Highest price",
     "Lowest price",
-    "Lowest price tomorrow",
+    "We are having FOREO's BEAR™ lowest price tomorrow!",
+    "Get ready to use your FAQ™ 202 device for a proper skincare!",
     "FAQ™ 202"
 ]
 
 # --- 4. Helper: find closest DB translation ---
 def get_best_db_translation(segment):
-    results = vector_db.similarity_search(segment, k=5)
+    results = vector_db.similarity_search(segment, k=5) # 1 = Closest to the most similar document, 10 = Closest to 10 similar documents
     if not results:
         return None, 0.0
     # Use difflib to find the best matching page_content
