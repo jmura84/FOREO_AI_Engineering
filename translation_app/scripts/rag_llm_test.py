@@ -43,7 +43,7 @@ def get_best_db_translation(segment):
     return best_translation, best_score
 
 # --- 5. RAG translation ---
-def rag_translate(segment, similarity_threshold=0.7):
+def rag_translate(segment, similarity_threshold=0.9): # How close to the vector DB segment is
     db_translation, score = get_best_db_translation(segment)
     if db_translation and score >= similarity_threshold:
         # If partial match, could refine remaining text with LLM
