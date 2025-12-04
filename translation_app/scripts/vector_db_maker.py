@@ -28,6 +28,8 @@ def main():
     # 1. Create the Embeddings function using Ollama
     # Make sure you have run 'ollama pull nomic-embed-text'
     embeddings_model = OllamaEmbeddings(
+        # https://ollama.com/library/nomic-embed-text
+        # https://huggingface.co/nomic-ai/nomic-embed-text-v1.5
         model="nomic-embed-text",
     )
 
