@@ -1,7 +1,7 @@
 Model,Type,COMET,TER,BLEU,Latency
-gemma2:9b,Standard,0.8593,60.78,35.4,536.0460023880005
-gemma2:9b,RAG,0.9472,5.84,93.78,81.82700109481812
-gemma3:4b-it-qat,Standard,0.8603,60.17,34.02,395.3143963813782
-gemma3:4b-it-qat,RAG,0.9476,5.77,93.82,94.89811444282532
-thinkverse/towerinstruct:latest,Standard,0.8063,101.19,22.38,426.6664514541626
-thinkverse/towerinstruct:latest,RAG,0.9316,6.96,92.64,58.92307806015015
+gemma2:9b,Standard,0.8577,60.39,35.84,500.3047103881836
+gemma2:9b,RAG,0.9498,3.93,95.75,69.97278332710266
+gemma3:4b-it-qat,Standard,0.8583,58.59,35.41,354.86656284332275
+gemma3:4b-it-qat,RAG,0.9518,3.76,95.73,93.29586124420166
+thinkverse/towerinstruct:latest,Standard,0.8083,101.02,22.09,413.58502554893494
+thinkverse/towerinstruct:latest,RAG,0.9375,6.12,93.29,54.930840730667114
