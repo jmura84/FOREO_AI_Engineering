@@ -121,7 +121,7 @@ Open your browser and navigate to the local URL shown in your terminal (usually 
 * **Image Transcription (OCR):**
     1.  Click "Transcribe Image 🖼️".
     2.  Upload your `.png` or `.jpg` file.
-    3.  The transcribed text (using the fixed `gemma3:12b` model) will appear in the "Source Text" box.
+    3.  The transcribed text (using `deepseek-ocr:3b` model) will appear in the "Source Text" box.
 
 * **Save Corrections (Improve the TM):**<br><br>
     **WARNING:** DON'T add line breaks to the texts in the Source or Target language content since the correction is done based on the segment corresponding to the same line in both boxes.
