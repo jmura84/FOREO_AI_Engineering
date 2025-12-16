@@ -67,7 +67,10 @@ This application is **entirely dependent on Ollama** to function.
     ollama pull gemma3:4b
     ollama pull gemma3:4b-it-qat
     ollama pull thinkverse/towerinstruct:latest
+    ollama pull deepseek-ocr:3b
     ```
+
+You can skip the bigger Gemma 3 model (12b) if your hardware is not as powerful.
     
 ### Step 2: Install Python Dependencies
 
