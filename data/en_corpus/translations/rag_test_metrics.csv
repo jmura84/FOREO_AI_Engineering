@@ -1,0 +1,7 @@
+Model,Type,COMET QE,Latency
+gemma2:9b,Standard,0.2868,400.3490860462189
+gemma2:9b,RAG,0.3338,337.15187311172485
+gemma3:4b-it-qat,Standard,0.3078,291.60766530036926
+gemma3:4b-it-qat,RAG,0.3464,379.4137270450592
+thinkverse/towerinstruct:latest,Standard,0.2151,330.6545219421387
+thinkverse/towerinstruct:latest,RAG,0.2452,260.3244047164917
