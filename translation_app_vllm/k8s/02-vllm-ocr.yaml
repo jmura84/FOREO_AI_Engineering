@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm-ocr
+  labels:
+    app: vllm-ocr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vllm-ocr
+  template:
+    metadata:
+      labels:
+        app: vllm-ocr
+    spec:
+      containers:
+      - name: vllm
+        image: vllm/vllm-openai:latest
+        command: ["python3", "-m", "vllm.entrypoints.openai.api_server"]
+        args:
+        - "--model"
+        - "deepseek-ai/deepseek-vl-1.3b-chat" 
+        - "--served-model-name"
+        - "deepseek-ocr:3b"
+        - "--gpu-memory-utilization"
+        - "0.85"
+        - "--max-model-len"
+        - "4096"
+        - "--trust-remote-code"
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+            nvidia.com/gpu: "1"
+        env:
+        - name: HUGGING_FACE_HUB_TOKEN
+          valueFrom:
+             secretKeyRef:
+               name: hf-secret
+               key: token
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vllm-ocr-service
+spec:
+  selector:
+    app: vllm-ocr
+  ports:
+  - protocol: TCP
+    port: 8001
+    targetPort: 8000
