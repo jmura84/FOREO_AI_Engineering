@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: translation-app-vllm:latest
+        image: gcr.io/gen-lang-client-0088002625/translation-app-vllm:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 7860

@@ -1,130 +1,103 @@
-# 🤖 FOREO SLM Translator
+# Translation App with vLLM
 
-> A multimodal and multilingual translator with built-in Translation Memory.
+This is a specialized version of the Translation App designed to run on **Google Kubernetes Engine (GKE)**, leveraging **vLLM** for high-performance inference of Large Language Models.
 
-This project is an advanced, multimodal translation application built with Gradio and LangChain, designed to run locally using the power of Ollama models. It serves as a powerful interface for text, audio, and image translation, leveraging a sophisticated two-agent pipeline that learns from user corrections.
+It orchestrates three components:
+1.  **Translation App**: The main FastAPI/Gradio user interface.
+2.  **vLLM Text Service**: Serves the `google/gemma-2-9b-it` model for translation.
+3.  **vLLM OCR Service**: Serves the `deepseek-ai/deepseek-vl-1.3b-chat` model for optical character recognition.
 
-## ✨ Key Features
+## Prerequisites
 
-* **Multilingual Text Translation:** Supports translations between English, Spanish, Polish, and Turkish.
+Before running this application, ensure you have the following tools installed and configured:
 
-* **Sequential Translation Pipeline:** Uses a two-agent architecture for maximum accuracy:
-    1.  **Agent 1 (NMT):** The `llm_call.py` module generates a raw translation using a selected Ollama LLM.
-    2.  **Script (TM Corrector):** The `user_mods_corrector.py` module (a Python-based rules processor) reviews the raw translation against a user-generated CSV, and if the segment matches 100% it automatically applies the correction.
+1.  **Google Cloud Platform Project**: An active project with billing enabled.
+2.  **Google Cloud SDK**: [Install gcloud CLI](https://cloud.google.com/sdk/docs/install).
+3.  **Docker Desktop**: Required to build the images.
+4.  **Kubectl**: The Kubernetes command-line tool.
 
-* **Evolving Translation Memory (TM):** Any manual corrections saved via the UI are stored in `data/user_mods_tm.csv`. This "memory" is used by the script in all future translations to prevent repeated errors.
+## Deployment Instructions
 
-* **Audio/Video Transcription:** Utilizes `openai-whisper` (via `audio2text.py`) to transcribe audio or video files (`.mp3`, `.wav`, `.mp4`) into `.SRT` formatted text, which is then populated in the source text box.
+### 1. Initial Setup & Authentication
 
-* **Image Transcription (OCR):** Employs a multimodal model (`gemma3:12b` via `img_transcriptor.py`) to extract text from uploaded images (`.png`, `.jpg`), placing the transcribed text into the source box.
+Open a PowerShell terminal and run these commands to set up your environment (do this once):
 
-## 🏛️ Architecture & Project Structure
+```powershell
+# 1. Login to Google Cloud
+gcloud auth login
 
-The application is launched from `main.py`, which initializes the `gradio_ui.py` interface. The UI acts as an **Orchestrator**, dispatching tasks to the appropriate modules in the `modules/` directory.
+# 2. Configure Docker to use Google credentials
+gcloud auth configure-docker
 
-```text
-translation_app/
-├── data/
-│   ├── foreo_uniques_en-es_TM.csv
-│   ├── merged_foreo_en-es.csv
-│   └── user_mods_tm.csv        <-- 💾 Your Evolving Translation Memory!
-├── media/
-│   └── (Test media files)
-├── modules/
-│   ├── audio2text.py           (Whisper processor for Audio/Video)
-│   ├── img_transcriptor.py     (OCR processor for Images)
-│   ├── llm_call.py             (Agent 1: Raw NMT Translator)
-│   ├── user_mods_corrector.py   (Agent 2: Python-based TM Corrector)
-│── rag/
-│   └── (ChromaDB Vector Store)
-├── ui/
-│   ├── gradio_ui.py            (All UI logic and orchestration)
-├── .gitignore
-├──__init__.py
-├── main.py                     <-- 🚀 Run this file!
-├── README.md
-└── requirements.txt
+# 3. Install the GKE Auth Plugin (Critical for GKE access)
+gcloud components install gke-gcloud-auth-plugin
+
+# 4. Connect to your GKE Cluster
+# Replace CLUSTER_NAME, ZONE, and PROJECT_ID with your actual values
+gcloud container clusters get-credentials CLUSTER_NAME --zone ZONE --project PROJECT_ID
 ```
 
-## 🏁 Setup and Installation Guide
+### 2. Create Required Secrets
 
-Follow these 3 steps to get the application running.
+You need a Hugging Face token to download the gated models (like Gemma).
 
-### Step 1: Install and Configure Ollama (Prerequisite)
+```powershell
+kubectl create secret generic hf-secret --from-literal=token=YOUR_HUGGING_FACE_TOKEN
+```
 
-This application is **entirely dependent on Ollama** to function.
+### 3. Build and Push Docker Image
 
-1.  **Install Ollama:** Download and install the Ollama desktop application from [ollama.com](https://ollama.com/).
+We use a custom PowerShell script to build the app image and push it to Google Container Registry.
 
-2.  **Run Ollama:** Always ensure the Ollama application is running in the background.
+```powershell
+# Navigate to this directory
+cd translation_app_vllm
 
-3.  **Pull Required Models:** This application requires several models to be downloaded before use. Open your terminal and run `ollama pull` for each model listed below. **The app will fail if the models are not pulled first.**
+# Run the build script
+.\build_and_push.ps1 -ProjectId "YOUR_PROJECT_ID"
+```
+*Example: `.\build_and_push.ps1 -ProjectId "YOUR_PROJECT_ID"`*
 
-    ```bash
-    # --- Translation LLMs (from the dropdown) ---
-    ollama pull gemma2:9b
-    ollama pull gemma3:12b
-    ollama pull gemma3:4b
-    ollama pull gemma3:4b-it-qat
-    ollama pull thinkverse/towerinstruct:latest
-    ollama pull deepseek-ocr:3b
+### 4. Deploy to GKE
+
+Deploy the backend services and the application using kubectl.
+
+**Note**: The manifests in `k8s/` are configured for **GKE Autopilot** using **NVIDIA L4** GPUs.
+
+```powershell
+# 1. Deploy the Text Generation Service
+kubectl apply -f k8s/01-vllm-text.yaml
+
+# 2. Deploy the OCR Service
+kubectl apply -f k8s/02-vllm-ocr.yaml
+
+# 3. Deploy the Application
+kubectl apply -f k8s/03-app.yaml
+```
+
+### 5. Accessing the App
+
+It takes **5-10 minutes** for the pods to start because they need to download large model files (approx. 20GB+).
+
+1.  **Check Status**:
+    ```powershell
+    kubectl get pods --watch
     ```
+    Wait until `translation-app`, `vllm-text`, and `vllm-ocr` are all in `Running` state.
 
-You can skip the bigger Gemma 3 model (12b) if your hardware is not as powerful.
-    
-### Step 2: Install Python Dependencies
+2.  **Get Authenticated URL**:
+    ```powershell
+    kubectl get svc translation-app-service
+    ```
+    Copy the `EXTERNAL-IP` address.
 
-1.  **Create a Virtual Environment:** (Recommended)
+3.  **Run**:
+    Open `http://<EXTERNAL-IP>` in your web browser.
 
-    ```bash
-    python -m venv .venv
-    
-2.  **Activate the Environment:**
+## Using the App
 
-    * On Windows: `.\.venv\Scripts\activate`
-    * On macOS/Linux: `source .venv/bin/activate`
+The interface provides a familiar translation experience:
 
-3.  **Install Requirements:** Install all necessary Python libraries (like Gradio, LangChain, Pandas, etc.) using the `requirements.txt` file.
-
-    ```bash
-    pip install -r requirements.txt
-    
-4.  **(Audio Dependency):** The audio transcriber (`audio2text.py`) requires **`ffmpeg`**. You must install this separately on your system.
-
-    * *Windows (via Chocolatey):* `choco install ffmpeg`
-    * *macOS (via Homebrew):* `brew install ffmpeg`
-
-### Step 3: Run the Application
-
-Once Ollama is running and your Python dependencies are installed, launch the app by running `main.py` from the project root (`translation_app/`):
-
-```bash
-python main.py
-```
-
-Open your browser and navigate to the local URL shown in your terminal (usually `http://127.0.0.1:7860`).
-
-## 🚀 How to Use the App
-
-* **Text Translation:**
-    1.  Type your text into the "Source Text" box.
-    2.  Always select the correct "Source Language" and "Target Language".
-    3.  Choose the "Ollama Model" you wish to use.
-    4.  Click "Translate ➡️".
-
-* **Audio/Video Transcription (SRT):**
-    1.  Click "Transcribe Audio/Video 🎵".
-    2.  Select a "Whisper Model" (e.g., `base`, `small`).
-    3.  Upload your `.mp3`, `.wav`, or `.mp4` file.
-    4.  The transcribed `.SRT` text will appear in the "Source Text" box, ready to be translated.
-
-* **Image Transcription (OCR):**
-    1.  Click "Transcribe Image 🖼️".
-    2.  Upload your `.png` or `.jpg` file.
-    3.  The transcribed text (using `deepseek-ocr:3b` model) will appear in the "Source Text" box.
-
-* **Save Corrections (Improve the TM):**<br><br>
-    **WARNING:** DON'T add line breaks to the texts in the Source or Target language content since the correction is done based on the segment corresponding to the same line in both boxes.
-    1.  After a translation, edit the text in the "Translated Text" box.
-    2.  A "Save Modification" button will appear.
-    3.  Click it. Your correction is now saved to `data/user_mods_tm.csv` and will be used automatically the next time you translate that segment.
+*   **Source/Target Language**: Select your desired languages.
+*   **Input**: Type text directly or use the "OCR" tab to upload an image.
+*   **Translate**: Click the button to get the result from the vLLM-powered Gemma model.
