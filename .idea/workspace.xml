@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/translation_app_hf/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app_hf/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app_hf/core/llm_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/core/llm_engine.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app_hf/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/requirements.txt" afterDir="false" />
@@ -24,7 +25,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/translation_app_hf" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -56,7 +57,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "dev",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "last_opened_file_path": "C:/Python_repositories/foreo-ai-engineering-project/data/aligned csv",
@@ -65,7 +66,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "yarn",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   }

@@ -52,7 +52,7 @@ class RAGEngine:
             logger.error(f"✗ Failed to initialize RAG Engine: {e}")
             self.vector_db = None
 
-    def retrieve_context(self, query_text: str, k=5, similarity_threshold=0.92):
+    def retrieve_context(self, query_text: str, source_lang: str = "English", k=5, similarity_threshold=0.92):
         if not self.vector_db:
             self.initialize()
             if not self.vector_db:
@@ -62,19 +62,31 @@ class RAGEngine:
             results = self.vector_db.similarity_search(query_text, k=k)
             context_pairs = []
             for d in results:
-                src = d.page_content
-                tgt = d.metadata.get("target", None)
+                src = d.page_content # Always English in current DB
+                tgt = d.metadata.get("target", None) # Always Spanish in current DB
                 if tgt:
                     context_pairs.append((src, tgt))
             
             # Check for strong match
             best_score = 0.0
             best_target = None
-            for src, tgt in context_pairs:
-                score = SequenceMatcher(None, query_text.lower(), src.lower()).ratio()
+            
+            for src_db, tgt_db in context_pairs:
+                # If source is English, we match query against src_db (English)
+                # If source is Spanish, we match query against tgt_db (Spanish)
+                if source_lang == "English":
+                    db_compare_text = src_db
+                else: # Spanish
+                    db_compare_text = tgt_db
+
+                score = SequenceMatcher(None, query_text.lower(), db_compare_text.lower()).ratio()
                 if score > best_score:
                     best_score = score
-                    best_target = tgt
+                    # If match found, we return the translation (the OTHER side)
+                    if source_lang == "English":
+                        best_target = tgt_db
+                    else:
+                        best_target = src_db
             
             if best_score >= similarity_threshold and best_target:
                 return best_target, context_pairs # Direct match found
@@ -85,22 +97,41 @@ class RAGEngine:
             logger.error(f"Error retrieving context: {e}")
             return None, []
 
-    def format_rag_prompt(self, query_text, context_pairs):
+    def format_rag_prompt(self, query_text, context_pairs, source_lang="English", target_lang="Spanish"):
         if not context_pairs:
             return None
             
-        context_text = "\n".join([f"- Source: {src}\n  Target: {tgt}" for src, tgt in context_pairs])
+        # Format examples based on direction
+        formatted_examples = []
+        for src_db, tgt_db in context_pairs:
+            if source_lang == "English":
+                # Eng -> Spa : Source=Eng, Target=Spa
+                formatted_examples.append(f"- Source: {src_db}\n  Target: {tgt_db}")
+            else:
+                # Spa -> Eng : Source=Spa, Target=Eng
+                formatted_examples.append(f"- Source: {tgt_db}\n  Target: {src_db}") # Inverted
         
+        context_text = "\n".join(formatted_examples)
+        
+        # Determine format instruction
+        if target_lang == "Spanish":
+            date_format = "dd/mm/yyyy"
+            exclude_note = "Do NOT add any quotation marks or extra characters."
+        else: # target English
+            date_format = "mm/dd/yyyy"
+            exclude_note = ""
+
         prompt = f"""
 ### Style and Context Examples
 {context_text}
 
 ### Task
-Translate the text below to Spanish.
+Translate the text below to {target_lang}.
 Follow the style and terminology of the examples above.
-Also convert datetime to the Spanish format dd/mm/yyyy.
+Also convert datetime to the {target_lang} format ({date_format}).
 Do not translate product names.
 Do NOT add explanations, questions, or comments.
+{exclude_note}
 Return only the translation.
 
 Text to translate:

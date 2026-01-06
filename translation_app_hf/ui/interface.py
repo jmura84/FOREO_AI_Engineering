@@ -76,25 +76,22 @@ def translate_wrapper(text, model_name_label, temperature, source_lang, target_l
         engine = get_llm_engine(model_name)
         
         rag_context = None
-        if use_rag and source_lang == "English" and target_lang == "Spanish":
+        rag_context = None
+        # Enable RAG for Eng->Spa AND Spa->Eng
+        is_rag_pair = (source_lang == "English" and target_lang == "Spanish") or (source_lang == "Spanish" and target_lang == "English")
+        
+        if use_rag and is_rag_pair:
             try:
                 rag_engine = get_rag_engine()
-                # Assuming text matches segments better if we split, but for this quick impl we query with full text
-                # or simplified segment. Ideally, we iterate sentence by sentence, but that's complex.
-                # The notebook processes segments individually.
-                # If the input text is long, this single retrieval might not be optimal, but it adheres to the requested scope.
-                # For best results with RAG, we might check if text is short enough.
-                # Let's try to retrieve context for the whole block or the first meaningful part.
+                # Retrieve context (bidirectional logic in engine)
+                best_target, context_pairs = rag_engine.retrieve_context(text, source_lang=source_lang)
                 
-                # Retrieve context (using the standard retrieval from the notebook logic)
-                best_target, context_pairs = rag_engine.retrieve_context(text)
-                
-                # If perfect match found (case A in notebook), we could just return it!
+                # If perfect match found, return it
                 if best_target:
                     return best_target
                 
                 # Otherwise prepare prompt
-                rag_context = rag_engine.format_rag_prompt(text, context_pairs)
+                rag_context = rag_engine.format_rag_prompt(text, context_pairs, source_lang=source_lang, target_lang=target_lang)
                 
             except Exception as e:
                 print(f"RAG Error: {e}")
@@ -301,10 +298,11 @@ def show_save_button():
     return gr.Button(visible=True), gr.Label(visible=False)
 
 def update_rag_visibility(source_lang, target_lang):
-    if source_lang == "English" and target_lang == "Spanish":
-        return gr.Checkbox(interactive=True)
+    if (source_lang == "English" and target_lang == "Spanish") or \
+       (source_lang == "Spanish" and target_lang == "English"):
+        return gr.Checkbox(interactive=True, label="RAG (English <-> Spanish only)")
     else:
-        return gr.Checkbox(value=False, interactive=False)
+        return gr.Checkbox(value=False, interactive=False, label="RAG (English <-> Spanish only)")
 
 # -----------------------------
 # Gradio Interface
@@ -332,7 +330,7 @@ def create_gradio_interface():
             source_lang_dd = gr.Dropdown(label="Source Language", choices=LANGUAGES, value="English")
             target_lang_dd = gr.Dropdown(label="Target Language", choices=LANGUAGES, value="Spanish")
         
-        rag_checkbox = gr.Checkbox(label="RAG (English -> Spanish only)", value=False)
+        rag_checkbox = gr.Checkbox(label="RAG (English <-> Spanish only)", value=False)
 
         with gr.Row(equal_height=True):
             with gr.Column(scale=5):
