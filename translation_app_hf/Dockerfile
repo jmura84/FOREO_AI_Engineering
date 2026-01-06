@@ -22,6 +22,10 @@ COPY . .
 
 # Create a non-root user for HuggingFace Spaces
 RUN useradd -m -u 1000 user
+
+# Switch ownership of the application directory to the user
+RUN chown -R user:user /app
+
 USER user
 ENV HOME=/home/user \
     PATH=/home/user/.local/bin:$PATH

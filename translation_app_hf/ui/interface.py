@@ -5,6 +5,7 @@ from datetime import datetime
 from core.llm_engine import get_llm_engine
 from core.vision_engine import get_vision_engine
 from core.audio_engine import get_audio_engine
+from core.rag_engine import get_rag_engine
 from core.corrector import review_and_correct
 import time
 import threading
@@ -64,7 +65,7 @@ def run_with_thread(func, args=(), update_interval=0.1):
 # -----------------------------
 # Translation wrapper
 # -----------------------------
-def translate_wrapper(text, model_name_label, temperature, source_lang, target_lang):
+def translate_wrapper(text, model_name_label, temperature, source_lang, target_lang, use_rag):
     if not text:
         yield "", "", gr.Button(visible=False), gr.Label(visible=False)
         return
@@ -73,12 +74,39 @@ def translate_wrapper(text, model_name_label, temperature, source_lang, target_l
 
     def _translate_task():
         engine = get_llm_engine(model_name)
-        system_prompt = (
-            f"You are a professional translator. Translate the following content from {source_lang} to {target_lang}. "
-            "If the input is SRT format, preserve all numbering, timestamps, and formatting. "
-            "Return ONLY the translated content maintaining the original format."
-        )
-        raw_translation = engine.translate(text, source_lang, target_lang, temperature)
+        
+        rag_context = None
+        if use_rag and source_lang == "English" and target_lang == "Spanish":
+            try:
+                rag_engine = get_rag_engine()
+                # Assuming text matches segments better if we split, but for this quick impl we query with full text
+                # or simplified segment. Ideally, we iterate sentence by sentence, but that's complex.
+                # The notebook processes segments individually.
+                # If the input text is long, this single retrieval might not be optimal, but it adheres to the requested scope.
+                # For best results with RAG, we might check if text is short enough.
+                # Let's try to retrieve context for the whole block or the first meaningful part.
+                
+                # Retrieve context (using the standard retrieval from the notebook logic)
+                best_target, context_pairs = rag_engine.retrieve_context(text)
+                
+                # If perfect match found (case A in notebook), we could just return it!
+                if best_target:
+                    return best_target
+                
+                # Otherwise prepare prompt
+                rag_context = rag_engine.format_rag_prompt(text, context_pairs)
+                
+            except Exception as e:
+                print(f"RAG Error: {e}")
+                # Fallback to standard translation if RAG fails
+                rag_context = None
+
+        # Standard Translation (with potential RAG context injected)
+        raw_translation = engine.translate(text, source_lang, target_lang, temperature, rag_context=rag_context)
+        
+        # If we used RAG, we might skip the corrector or keep it. 
+        # The notebook didn't use a corrector, but the app does. 
+        # Let's keep the corrector for consistency unless it interferes.
         return review_and_correct(raw_translation, text, CSV_FILE_PATH, source_lang, target_lang)
 
     result_container = {}
@@ -187,6 +215,7 @@ def transcribe_image(file_path, source_lang, ocr_model_label):
         yield gr.update(), gr.Label(value="No image uploaded.", visible=True)
         return
 
+    # Detect selected OCR model
     if "gemini" in ocr_model_label.lower():
         selected_model = "gemini"
     else:
@@ -197,11 +226,13 @@ def transcribe_image(file_path, source_lang, ocr_model_label):
     def target():
         try:
             if selected_model == "qwen":
+                # Local Qwen OCR
                 engine = get_vision_engine("Qwen/Qwen2-VL-2B-Instruct")
                 engine.load_model()
                 result_container['result'] = engine.transcribe_image(file_path, source_lang)
 
             else:
+                # Gemini OCR (via Google API)
                 import google.generativeai as genai
                 api_key = os.getenv("GOOGLE_API_KEY")
                 if not api_key:
@@ -238,6 +269,7 @@ def transcribe_image(file_path, source_lang, ocr_model_label):
         except Exception as e:
             result_container['error'] = e
 
+    # Threading wrapper
     t = threading.Thread(target=target)
     t.start()
     start_time = time.time()
@@ -268,14 +300,17 @@ def update_other_dropdown(selected_val, other_val):
 def show_save_button():
     return gr.Button(visible=True), gr.Label(visible=False)
 
+def update_rag_visibility(source_lang, target_lang):
+    if source_lang == "English" and target_lang == "Spanish":
+        return gr.Checkbox(interactive=True)
+    else:
+        return gr.Checkbox(value=False, interactive=False)
+
 # -----------------------------
 # Gradio Interface
 # -----------------------------
 def create_gradio_interface():
-
-    # 🔥 CHANGE IS HERE — CSS IS NOW APPLIED
-    with gr.Blocks(css=CUSTOM_CSS) as demo:
-
+    with gr.Blocks() as demo:
         gr.Markdown("# 🤖 FOREO HF Translator")
         gr.Markdown("Powered by Hugging Face, Google, OpenAI & Qwen/Vision Models")
 
@@ -290,11 +325,14 @@ def create_gradio_interface():
             )
             temp = gr.Slider(label="Temperature", minimum=0.0, maximum=1.0, step=0.1, value=0.3)
 
+
         # Text Translation
         gr.Markdown("## Text Translation")
         with gr.Row():
             source_lang_dd = gr.Dropdown(label="Source Language", choices=LANGUAGES, value="English")
             target_lang_dd = gr.Dropdown(label="Target Language", choices=LANGUAGES, value="Spanish")
+        
+        rag_checkbox = gr.Checkbox(label="RAG (English -> Spanish only)", value=False)
 
         with gr.Row(equal_height=True):
             with gr.Column(scale=5):
@@ -344,10 +382,14 @@ def create_gradio_interface():
         # Event wiring
         source_lang_dd.change(update_other_dropdown, inputs=[source_lang_dd, target_lang_dd], outputs=target_lang_dd)
         target_lang_dd.change(update_other_dropdown, inputs=[target_lang_dd, source_lang_dd], outputs=source_lang_dd)
+        
+        # Update RAG checkbox availability when languages change
+        source_lang_dd.change(update_rag_visibility, inputs=[source_lang_dd, target_lang_dd], outputs=rag_checkbox)
+        target_lang_dd.change(update_rag_visibility, inputs=[source_lang_dd, target_lang_dd], outputs=rag_checkbox)
 
         translate_button.click(
             translate_wrapper,
-            inputs=[source_text, model_name_label, temp, source_lang_dd, target_lang_dd],
+            inputs=[source_text, model_name_label, temp, source_lang_dd, target_lang_dd, rag_checkbox],
             outputs=[target_text, original_translation_state, save_button, feedback_label]
         )
 
