@@ -18,7 +18,7 @@ llm = OllamaLLM(model="gemma3:4b-it-qat", temperature=0.2)
 # ---------------------------------------------------------
 def retrieve_context(segment, k=5):
     """
-    Returns a list of (source, target) pairs from the vector DB.
+    Returns a list of (source, target) pairs from the vector DB
     """
     results = vector_db.similarity_search(segment, k=k)
     context_pairs = []
