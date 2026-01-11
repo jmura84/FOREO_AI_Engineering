@@ -297,7 +297,7 @@ def create_app():
                 label="Ollama Model",
                 value="gemma3:4b-it-qat",
                 # Added gemma3:12b to the list
-                choices=["gemma2:9b", "gemma3:4b", "gemma3:4b-it-qat", "gemma3:12b", "gemma3:12b-it-qat", "thinkverse/towerinstruct:latest"]
+                choices=["gemma2:9b", "gemma3:4b", "gemma3:4b-it-qat", "omercelik/gemmax2-9b:latest", "gemma3:12b", "gemma3:12b-it-qat", "thinkverse/towerinstruct:latest"]
             )
             temp = gr.Slider(
                 label="Temperature (0 = More literal, 1 = More creative)",

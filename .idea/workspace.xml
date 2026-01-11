@@ -7,12 +7,7 @@
     <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/translation_app_hf/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/translation_app/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/translation_app/modules/llm_call.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/modules/llm_call.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/translation_app/rag/47732136-e6d4-4202-a0a0-bcf22d8e660e/data_level0.bin" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/rag/47732136-e6d4-4202-a0a0-bcf22d8e660e/data_level0.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/translation_app/rag/47732136-e6d4-4202-a0a0-bcf22d8e660e/length.bin" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/rag/47732136-e6d4-4202-a0a0-bcf22d8e660e/length.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/translation_app/rag/chroma.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/rag/chroma.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/translation_app/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/llms_evaluation_rag_test.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/llms_evaluation_rag_test.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app/ui/gradio_ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/ui/gradio_ui.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app_hf/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translation_app_hf/core/llm_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/core/llm_engine.py" afterDir="false" />
