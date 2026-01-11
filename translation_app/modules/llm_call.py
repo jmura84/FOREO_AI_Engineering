@@ -20,7 +20,7 @@ if torch.cuda.is_available():
 torch.set_float32_matmul_precision('high')
 
 
-def llm_translation(model_name: str, input_text: str, temp: float, source_lang: str, target_lang: str) -> str:
+def llm_translation(model_name: str, input_text: str, temp: float, source_lang: str, target_lang: str, rag_context: str = None) -> str:
     """
     (Agent 1)
     Translates the given text using the specified Ollama model and languages.
@@ -43,7 +43,13 @@ def llm_translation(model_name: str, input_text: str, temp: float, source_lang: 
         "Your response must be *only* the translated text and nothing else."
         # Removed "Preserve simple line breaks" as we now handle this 1 line at a time.
     )
-    human_template = "{text}"
+
+    # If RAG context is provided, we prepend it to the user message to guide the style/terminology
+    if rag_context:
+        human_template = f"{{rag_context}}\n\nText to translate:\n{{text}}"
+        # We need to make sure rag_context is passed to invoke
+    else:
+        human_template = "{text}"
     # --- END DYNAMIC PROMPT ---
 
     # Initialize the LLM with temperature and sampling settings:
@@ -84,7 +90,10 @@ def llm_translation(model_name: str, input_text: str, temp: float, source_lang: 
             number, srt_start, srt_end, text_to_translate = match.groups()
 
             # translation_output is a 'str'
-            translation_output = chain.invoke({"text": text_to_translate})
+            input_dict = {"text": text_to_translate}
+            if rag_context:
+                input_dict["rag_context"] = rag_context
+            translation_output = chain.invoke(input_dict)
 
             # We use AGGRESSIVE cleaning for SRT segments
             clean_trans = clean_segment(translation_output, model_name, is_srt_segment=True)
@@ -110,7 +119,10 @@ def llm_translation(model_name: str, input_text: str, temp: float, source_lang: 
                 translated_lines.append("")
             else:
                 # This is a line of text to translate
-                translation_output = chain.invoke({"text": line})
+                input_dict = {"text": line}
+                if rag_context:
+                    input_dict["rag_context"] = rag_context
+                translation_output = chain.invoke(input_dict)
                 # We use AGGRESSIVE (is_srt_segment=True) cleaning
                 # because each line should be a single line (no newlines).
                 clean_trans = clean_segment(translation_output, model_name, is_srt_segment=True)

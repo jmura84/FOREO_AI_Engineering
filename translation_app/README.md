@@ -16,7 +16,9 @@ This project is an advanced, multimodal translation application built with Gradi
 
 * **Audio/Video Transcription:** Utilizes `openai-whisper` (via `audio2text.py`) to transcribe audio or video files (`.mp3`, `.wav`, `.mp4`) into `.SRT` formatted text, which is then populated in the source text box.
 
-* **Image Transcription (OCR):** Employs a multimodal model (`gemma3:12b` via `img_transcriptor.py`) to extract text from uploaded images (`.png`, `.jpg`), placing the transcribed text into the source box.
+* **Image Transcription (OCR):** Employs a multimodal model (`deepseek-ocr:3b` via `img_transcriptor.py`) to extract text from uploaded images (`.png`, `.jpg`), placing the transcribed text into the source box.
+
+* **RAG-Enhanced Translation:** Uses a CPU-local Vector Store (ChromaDB) to retrieve relevant translation context (English <-> Spanish), providing the LLM with similar past translations to improve consistency and terminology.
 
 ## 🏛️ Architecture & Project Structure
 
@@ -34,7 +36,8 @@ translation_app/
 │   ├── audio2text.py           (Whisper processor for Audio/Video)
 │   ├── img_transcriptor.py     (OCR processor for Images)
 │   ├── llm_call.py             (Agent 1: Raw NMT Translator)
-│   ├── user_mods_corrector.py   (Agent 2: Python-based TM Corrector)
+│   ├── rag_engine.py           (RAG Engine: Vector DB & Context Retrieval)
+│   ├── user_mods_corrector.py  (Agent 2: Python-based TM Corrector)
 │── rag/
 │   └── (ChromaDB Vector Store)
 ├── ui/
@@ -109,8 +112,9 @@ Open your browser and navigate to the local URL shown in your terminal (usually 
 * **Text Translation:**
     1.  Type your text into the "Source Text" box.
     2.  Always select the correct "Source Language" and "Target Language".
-    3.  Choose the "Ollama Model" you wish to use.
-    4.  Click "Translate ➡️".
+    3.  (Optional) Check **"RAG (English <-> Spanish only)"** to leverage the vector database for better context.
+    4.  Choose the "Ollama Model" you wish to use.
+    5.  Click "Translate ➡️".
 
 * **Audio/Video Transcription (SRT):**
     1.  Click "Transcribe Audio/Video 🎵".

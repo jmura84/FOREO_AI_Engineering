@@ -17,6 +17,9 @@ try:
     # --- NEW: Import Image Transcriber ---
     from modules.img_transcriptor import image_ocr_llm_langchain
 
+    # --- NEW: Import RAG Engine ---
+    from modules.rag_engine import get_rag_engine
+
 except ImportError:
     # --- Updated error message ---
     print(
@@ -39,7 +42,7 @@ LANGUAGES = ["English", "Spanish", "Polish", "Turkish"]
 
 # --- UI Logic Functions ---
 
-def translate_and_clean(text, model, temperature, source_lang, target_lang):
+def translate_and_clean(text, model, temperature, source_lang, target_lang, use_rag=False):
     """
     Gradio wrapper: Calls the sequential pipeline.
     1. Calls llm_translation (Agent 1) for a raw translation.
@@ -48,9 +51,36 @@ def translate_and_clean(text, model, temperature, source_lang, target_lang):
     if not text:
         return "", "", gr.Button(visible=False), gr.Label(visible=False)
 
+    rag_context = None
+    # Enable RAG logic if requested
+    is_rag_pair = (source_lang == "English" and target_lang == "Spanish") or (source_lang == "Spanish" and target_lang == "English")
+    
+    if use_rag and is_rag_pair:
+        try:
+            print("Orchestrator: RAG enabled. Retrieving context...")
+            rag_engine = get_rag_engine()
+            best_target, context_pairs = rag_engine.retrieve_context(text, source_lang=source_lang)
+            
+            # If perfect match found, we could potentially just return it. 
+            # However, the user might want the full pipeline (corrector etc).
+            # But usually if it's a perfect match from TM/RAG, we should probably trust it.
+            # Let's pass it as context for now or if best_target is returnable.
+            # The HF implementation returned best_target directly. Let's do that for consistency if desired.
+            if best_target:
+                 print("Orchestrator: Perfect RAG match found.")
+                 clean_trans = best_target
+                 return clean_trans, clean_trans, gr.Button(visible=False), gr.Label(value="Translation complete (Cached)", visible=True)
+
+            # Otherwise prepare prompt
+            rag_context = rag_engine.format_rag_prompt(text, context_pairs, source_lang=source_lang, target_lang=target_lang)
+            
+        except Exception as e:
+            print(f"RAG Error: {e}")
+            rag_context = None
+
     # --- STEP 1: Call Agent 1 (Raw Translation) ---
     print("Orchestrator: Calling Agent 1 (Raw Translation)...")
-    raw_translation = llm_translation(model, text, temperature, source_lang, target_lang)
+    raw_translation = llm_translation(model, text, temperature, source_lang, target_lang, rag_context=rag_context)
 
     # --- STEP 2: Call TM Processor (Post-Editing) ---
     print("Orchestrator: Calling TM Processor (Post-Editing and Review)...")
@@ -166,6 +196,18 @@ def update_target_languages(source_lang):
         return gr.Dropdown(choices=new_choices, value=new_value, interactive=False)
 
 
+def update_rag_visibility(source_lang, target_lang):
+    """
+    Updates the RAG checkbox visibility based on language pair.
+    Only enables it for English <-> Spanish.
+    """
+    if (source_lang == "English" and target_lang == "Spanish") or \
+       (source_lang == "Spanish" and target_lang == "English"):
+        return gr.Checkbox(interactive=True, label="RAG (English <-> Spanish only)", value=True)
+    else:
+        return gr.Checkbox(value=False, interactive=False, label="RAG (English <-> Spanish only)")
+
+
 def handle_transcription_start():
     """Shows the 'Transcribing' status label."""
     return gr.Label(value="Transcribing... This may take a moment.", visible=True)
@@ -278,6 +320,9 @@ def create_app():
                 choices=LANGUAGES,
                 value="Spanish"
             )
+        
+        # --- NEW: RAG Checkbox ---
+        rag_checkbox = gr.Checkbox(label="RAG (English <-> Spanish only)", value=False, interactive=True)
 
         with gr.Row(equal_height=True):
             with gr.Column(scale=5):
@@ -354,9 +399,13 @@ def create_app():
             outputs=target_lang_dd
         )
 
+        # --- NEW: RAG Visibility Wiring ---
+        source_lang_dd.change(update_rag_visibility, inputs=[source_lang_dd, target_lang_dd], outputs=rag_checkbox)
+        target_lang_dd.change(update_rag_visibility, inputs=[source_lang_dd, target_lang_dd], outputs=rag_checkbox)
+
         translate_button.click(
             fn=translate_and_clean,
-            inputs=[source_text, model_name, temp, source_lang_dd, target_lang_dd],
+            inputs=[source_text, model_name, temp, source_lang_dd, target_lang_dd, rag_checkbox],
             outputs=[
                 target_text,
                 original_translation_state,
