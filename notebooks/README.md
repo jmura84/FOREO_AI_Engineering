@@ -8,10 +8,10 @@ This folder contains Jupyter notebooks used for **quantitative evaluation** of L
 
 | # | Notebook | Description |
 |---|----------|-------------|
-| 0 | `0 - llms_evaluation_prototype.ipynb` | **Prototype evaluation** — Initial benchmark comparing multiple LLMs on a small corpus using COMET and BLEU scores. Serves as the baseline experiment. |
-| 1 | `1 - llms_evaluation_biggercorpus.ipynb` | **Larger corpus evaluation** — Extends the prototype to a bigger dataset for more statistically robust results. |
-| 2 | `2 - llms_evaluation_difftemps.ipynb` | **Temperature comparison** — Compares translation quality across different temperature settings to find optimal generation parameters. |
-| 3 | `3 - llms_evaluation_rag_test.ipynb` | **RAG vs Standard** — Evaluates the performance improvement of RAG-augmented translation versus standard LLM translation using COMET/BLEU scores. |
+| 0 | `0 - llms_evaluation_prototype.ipynb` | **Prototype evaluation** — Initial benchmark comparing multiple LLMs on a small corpus using COMET, BLEU, TER and chrF scores. Serves as the baseline experiment. |
+| 1 | `1 - llms_evaluation_biggercorpus.ipynb` | **Larger corpus evaluation** — Extends the prototype to a bigger dataset for more statistically robust results. Evaluates with COMET, BLEU, TER and chrF. |
+| 2 | `2 - llms_evaluation_difftemps.ipynb` | **Temperature comparison** — Compares translation quality across different temperature settings using COMET, BLEU and TER to find optimal generation parameters. |
+| 3 | `3 - llms_evaluation_rag_test.ipynb` | **RAG vs Standard** — Evaluates the performance improvement of RAG-augmented translation versus standard LLM translation using COMET, BLEU and TER scores. |
 | 4 | `4 - llms_quality_estimation_rag_test.ipynb` | **Quality Estimation (QE)** — Uses reference-free QE models (e.g. CometKiwi) to score translations without needing ground-truth references. Compares standard vs RAG translations. |
 
 ---
@@ -41,6 +41,8 @@ Visualizations of detailed test results:
 |--------|------|-------------|
 | **COMET** | Reference-based | Neural MT evaluation metric; correlates highly with human judgement. |
 | **BLEU** | Reference-based | Classic n-gram overlap metric for machine translation. |
+| **TER** | Reference-based | Translation Edit Rate — measures the number of edits needed to transform the MT output into the reference. Lower is better. |
+| **chrF** | Reference-based | Character n-gram F-score — evaluates character-level overlap between translation and reference. More robust for morphologically rich languages. |
 | **CometKiwi (QE)** | Reference-free | Quality Estimation model that scores translations without needing a reference. |
 
 ---
