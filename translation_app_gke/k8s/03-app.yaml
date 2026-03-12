@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: translation-app
+  labels:
+    app: translation-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: translation-app
+  template:
+    metadata:
+      labels:
+        app: translation-app
+    spec:
+      containers:
+      - name: app
+        image: gcr.io/gen-lang-client-0088002625/translation-app-gke:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 7860
+        env:
+        - name: GOOGLE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: google-api-secret
+              key: api-key
+        - name: GRADIO_SERVER_NAME
+          value: "0.0.0.0"
+        # - name: VLLM_BASE_URL
+        #   value: "http://vllm-text-service:8000/v1"
+        # - name: VLLM_OCR_URL
+        #   value: "http://vllm-ocr-service:8001/v1"
+        # - name: VLLM_API_KEY
+        #   value: "EMPTY"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: translation-app-service
+spec:
+  selector:
+    app: translation-app
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 7860

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/translation_app_hf/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/llms_evaluation_biggercorpus.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/llms_evaluation_difftemps.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/llms_evaluation_prototype.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/llms_evaluation_rag_test.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/llms_quality_estimation_rag_test.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app/rag/47732136-e6d4-4202-a0a0-bcf22d8e660e/data_level0.bin" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/rag/47732136-e6d4-4202-a0a0-bcf22d8e660e/data_level0.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app/rag/47732136-e6d4-4202-a0a0-bcf22d8e660e/length.bin" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/rag/47732136-e6d4-4202-a0a0-bcf22d8e660e/length.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app/rag/chroma.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app/rag/chroma.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app_hf/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app_hf/core/llm_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/core/llm_engine.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app_hf/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translation_app_hf/ui/interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/translation_app_hf/ui/interface.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="GitLabMergeRequestFiltersHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPENED&quot;,
+    &quot;assignee&quot;: {
+      &quot;type&quot;: &quot;org.jetbrains.plugins.gitlab.mergerequest.ui.filters.GitLabMergeRequestsFiltersValue.MergeRequestsMemberFilterValue.MergeRequestsAssigneeFilterValue&quot;,
+      &quot;username&quot;: &quot;project_27_bot_6c3f59d9de4e63cd353aceaa305067db&quot;,
+      &quot;fullname&quot;: &quot;FOREO AI&quot;
+    }
+  }
+}</component>
+  <component name="GitLabMergeRequestsSettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;first&quot;: &quot;https://foreogitlab.localto.net/jmura84/foreo-ai-engineering-project.git&quot;,
+    &quot;second&quot;: &quot;8b002b34-d091-4183-8c90-56ae4728125c&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="33qMyn8Hm3F73s9sIbCwU39GHXC" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.gradio_ui.executor&quot;: &quot;Run&quot;,
+    &quot;Python.img_transcriptor.executor&quot;: &quot;Run&quot;,
+    &quot;Python.llm_call.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.posteditor_agent.executor&quot;: &quot;Run&quot;,
+    &quot;Python.rag_llm_context_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.rag_llm_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.rag_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.rag_translation_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.scraping_etl_biggercorpus.executor&quot;: &quot;Run&quot;,
+    &quot;Python.scraping_etl_en_corpus.executor&quot;: &quot;Run&quot;,
+    &quot;Python.txt_to_csv.executor&quot;: &quot;Run&quot;,
+    &quot;Python.vector_db_maker.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Python_repositories/foreo-ai-engineering-project/data/aligned csv&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.python.group.settings&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Python_repositories\foreo-ai-engineering-project\data\aligned csv" />
+      <recent name="C:\Python_repositories\foreo-ai-engineering-project" />
+      <recent name="C:\Python_repositories\foreo-ai-engineering-project\translation_app\scripts" />
+      <recent name="C:\Python_repositories\foreo-ai-engineering-project\translation_app" />
+      <recent name="C:\Python_repositories\foreo-ai-engineering-project\translation_app_hf" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Python_repositories\foreo-ai-engineering-project\notebooks\testing scores" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-07523f343e4f-968fe969f28a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.28539.27" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0ae33e1f-b963-4169-98e0-2ed63159662a" name="Changes" comment="" />
+      <created>1760040406845</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1760040406845</updated>
+      <workItem from="1760040408506" duration="2510000" />
+      <workItem from="1760044988425" duration="127000" />
+      <workItem from="1760045123622" duration="701000" />
+      <workItem from="1760085742362" duration="6964000" />
+      <workItem from="1760198177935" duration="10877000" />
+      <workItem from="1760346658292" duration="870000" />
+      <workItem from="1760350904019" duration="462000" />
+      <workItem from="1760351420094" duration="899000" />
+      <workItem from="1760368992832" duration="9204000" />
+      <workItem from="1760391220302" duration="11933000" />
+      <workItem from="1760436975438" duration="8782000" />
+      <workItem from="1760595883714" duration="6994000" />
+      <workItem from="1760701815597" duration="1283000" />
+      <workItem from="1760716343146" duration="8683000" />
+      <workItem from="1760783094506" duration="3678000" />
+      <workItem from="1760985883965" duration="795000" />
+      <workItem from="1761138358572" duration="5000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/foreo_ai_engineering_project$txt_to_csv.coverage" NAME="txt_to_csv Coverage Results" MODIFIED="1760441521674" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
+    <SUITE FILE_PATH="coverage/foreo_ai_engineering_project$scraping_etl_biggercorpus.coverage" NAME="scraping_etl_biggercorpus Coverage Results" MODIFIED="1760397268833" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
+  </component>
+</project>
