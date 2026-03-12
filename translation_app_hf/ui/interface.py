@@ -28,9 +28,16 @@ CUSTOM_CSS = """
 # -----------------------------
 # Language model choices
 # -----------------------------
+# MODEL_CHOICES = [
+#    {"label": "gemini-2.0-flash-lite (Lowest latency - Highest rate limit)", "value": "gemini-2.0-flash-lite"},
+#    {"label": "gemini-2.0-flash (Good quality - High rate limit)", "value": "gemini-2.0-flash"},
+#    {"label": "gemini-2.5-flash-lite (Lowest latency - Highest rate limit)", "value": "gemini-2.5-flash-lite"},
+#    {"label": "gemini-2.5-flash (Good quality - High rate limit)", "value": "gemini-2.5-flash"},
+#    {"label": "gemini-2.5-pro (Best quality - Lower rate limit)", "value": "gemini-2.5-pro"},
+#    {"label": "google/gemma-2-2b-it (Open-source - No rate limits)", "value": "google/gemma-2-2b-it"}
+#]
+
 MODEL_CHOICES = [
-    {"label": "gemini-2.0-flash-lite (Lowest latency - Highest rate limit)", "value": "gemini-2.0-flash-lite"},
-    {"label": "gemini-2.0-flash (Good quality - High rate limit)", "value": "gemini-2.0-flash"},
     {"label": "gemini-2.5-flash-lite (Lowest latency - Highest rate limit)", "value": "gemini-2.5-flash-lite"},
     {"label": "gemini-2.5-flash (Good quality - High rate limit)", "value": "gemini-2.5-flash"},
     {"label": "gemini-2.5-pro (Best quality - Lower rate limit)", "value": "gemini-2.5-pro"},
